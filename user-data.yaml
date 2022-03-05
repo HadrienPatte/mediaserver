@@ -11,8 +11,13 @@ manage_etc_hosts: true
 
 ssh_pwauth: false
 
+groups:
+  - docker
+
 users:
   - name: hadrien
+    groups:
+      - docker
     lock_passwd: true
     ssh_import_id: gh:HadrienPatte
     shell: /bin/bash
@@ -21,6 +26,7 @@ users:
   - name: dd-agent
     groups:
       - adm
+      - docker
     homedir: /opt/datadog-agent
     lock_passwd: true
     shell: /usr/sbin/nologin
