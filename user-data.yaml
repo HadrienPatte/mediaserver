@@ -76,6 +76,7 @@ write_files:
 
   - path: /etc/datadog-agent/datadog.yaml
     owner: dd-agent:dd-agent
+    defer: True
     content: |
       api_key: REDACTED
       logs_enabled: true
@@ -86,9 +87,11 @@ write_files:
 
   - path: /etc/datadog-agent/conf.d/container.d/conf.yaml
     owner: dd-agent:dd-agent
+    defer: True
 
   - path: /etc/datadog-agent/conf.d/docker.d/conf.yaml
     owner: dd-agent:dd-agent
+    defer: True
     content: |
       init_config:
       instances:
@@ -97,6 +100,7 @@ write_files:
 
   - path: /etc/datadog-agent/conf.d/systemd.d/conf.yaml
     owner: dd-agent:dd-agent
+    defer: True
     content: |
       init_config:
       instances:
@@ -111,6 +115,7 @@ write_files:
 
   - path: /etc/datadog-agent/conf.d/cloud-init.d/conf.yaml
     owner: dd-agent:dd-agent
+    defer: True
     content: |
       logs:
         - type: file
@@ -125,6 +130,7 @@ write_files:
 
   - path: /etc/datadog-agent/conf.d/auth.d/conf.yaml
     owner: dd-agent:dd-agent
+    defer: True
     content: |
       logs:
         - type: file
@@ -133,6 +139,4 @@ write_files:
           source: auth
 
 runcmd:
-  - cloud-init single --name cc_write_files
-  - chown -R dd-agent:dd-agent /etc/datadog-agent/
   - systemctl restart datadog-agent
