@@ -1,0 +1,114 @@
+#cloud-config
+
+mounts:
+  - ["tmpfs", "/var/log", "tmpfs", "defaults,noatime,nosuid,mode=0755,size=256m", "0", "0"]
+
+locale: en_US.UTF-8
+timezone: Europe/Paris
+
+hostname: vanellope
+manage_etc_hosts: true
+
+ssh_pwauth: false
+
+users:
+  - name: hadrien
+    lock_passwd: true
+    ssh_import_id: gh:HadrienPatte
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+
+  - name: dd-agent
+    groups:
+      - adm
+    homedir: /opt/datadog-agent
+    lock_passwd: true
+    shell: /usr/sbin/nologin
+    no_log_init: true
+
+apt:
+  sources:
+    datadog:
+      source: deb https://apt.datadoghq.com/ stable 7
+      keyid: D3A80E30382E94DE
+      keyserver: keyserver.ubuntu.com
+
+packages:
+  - datadog-agent
+
+package_update: true
+package_upgrade: true
+package_reboot_if_required: true
+
+write_files:
+  - path: /etc/update-motd.d/10-help-text
+    content: ""
+
+  - path: /etc/update-motd.d/50-motd-news
+    content: ""
+
+  - path: /etc/logrotate.conf
+    content: |
+      daily
+
+      # use the adm group by default, since this is the owning group
+      # of /var/log/syslog.
+      su root adm
+
+      # keep logs one day
+      rotate 1
+
+      # create new (empty) log files after rotating old ones
+      create
+
+      /var/log/**/*.log {}
+
+  - path: /etc/datadog-agent/datadog.yaml
+    owner: dd-agent:dd-agent
+    content: |
+      api_key: REDACTED
+      logs_enabled: true
+      process_config:
+        enabled: true
+      apm_config:
+        enabled: false
+
+  - path: /etc/datadog-agent/conf.d/systemd.d/conf.yaml
+    owner: dd-agent:dd-agent
+    content: |
+      init_config:
+      instances:
+        - unit_names:
+          - containerd.service
+          - cron.service
+          - datadog-agent.service
+          - ssh.service
+          - unattended-upgrades.service
+
+  - path: /etc/datadog-agent/conf.d/cloud-init.d/conf.yaml
+    owner: dd-agent:dd-agent
+    content: |
+      logs:
+        - type: file
+          path: /var/log/cloud-init.log
+          service: cloud-init
+          source: cloud-init
+          start_position: beginning
+          log_processing_rules:
+            - type: multi_line
+              name: new_log_start_with_date
+              pattern: \d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\,\d{3}
+
+  - path: /etc/datadog-agent/conf.d/auth.d/conf.yaml
+    owner: dd-agent:dd-agent
+    content: |
+      logs:
+        - type: file
+          path: /var/log/auth.log
+          service: auth
+          source: auth
+
+runcmd:
+  - cloud-init single --name cc_write_files
+  - chown -R dd-agent:dd-agent /etc/datadog-agent/
+  - systemctl restart datadog-agent
