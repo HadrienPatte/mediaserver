@@ -32,9 +32,14 @@ apt:
       source: deb https://apt.datadoghq.com/ stable 7
       keyid: D3A80E30382E94DE
       keyserver: keyserver.ubuntu.com
+    docker:
+      source: deb [arch=arm64] https://download.docker.com/linux/ubuntu $RELEASE stable
+      keyid: 7EA0A9C3F273FCD8
+      keyserver: keyserver.ubuntu.com
 
 packages:
   - datadog-agent
+  - docker-ce
 
 package_update: true
 package_upgrade: true
@@ -73,6 +78,17 @@ write_files:
       apm_config:
         enabled: false
 
+  - path: /etc/datadog-agent/conf.d/container.d/conf.yaml
+    owner: dd-agent:dd-agent
+
+  - path: /etc/datadog-agent/conf.d/docker.d/conf.yaml
+    owner: dd-agent:dd-agent
+    content: |
+      init_config:
+      instances:
+        - url: unix://var/run/docker.sock
+          new_tag_names: true
+
   - path: /etc/datadog-agent/conf.d/systemd.d/conf.yaml
     owner: dd-agent:dd-agent
     content: |
@@ -82,6 +98,8 @@ write_files:
           - containerd.service
           - cron.service
           - datadog-agent.service
+          - docker.service
+          - docker.socket
           - ssh.service
           - unattended-upgrades.service
 
