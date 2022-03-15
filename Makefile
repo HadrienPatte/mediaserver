@@ -12,3 +12,6 @@ flash:
 
 configure: mount
 	sudo cp bootstrap/user-data.yaml /media/${USER}/system-boot/user-data
+
+ansible:
+	ansible-playbook -i inventory.yml playbook.yml

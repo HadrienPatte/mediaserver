@@ -1,0 +1,46 @@
+---
+- name: Install podman
+  apt:
+    package: podman
+    state: present
+
+- name: Install the datadog agent
+  include_role:
+    name: datadog.datadog
+  vars:
+    datadog_additional_groups: adm
+    datadog_config:
+      logs_enabled: true
+      process_config:
+        enabled: true
+      apm_config:
+        enabled: false
+    datadog_checks:
+      container:
+        init_config:
+        instances:
+      systemd:
+        init_config:
+        instances:
+          - unit_names:
+              - cron.service
+              - datadog-agent.service
+              - ssh.service
+              - unattended-upgrades.service
+      cloud-init:
+        logs:
+          - type: file
+            path: /var/log/cloud-init.log
+            service: cloud-init
+            source: cloud-init
+            start_position: beginning
+            log_processing_rules:
+              - type: multi_line
+                name: new_log_start_with_date
+                pattern: \d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\,\d{3}
+      auth:
+        logs:
+          - type: file
+            path: /var/log/auth.log
+            service: auth
+            source: auth

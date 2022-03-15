@@ -1,0 +1,7 @@
+---
+- name: Configure mediaserver
+  become: true
+  roles:
+    - mediaserver
+  hosts:
+    - vanellope
