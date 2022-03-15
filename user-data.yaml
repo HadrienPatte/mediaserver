@@ -1,7 +1,9 @@
 #cloud-config
 
 mounts:
-  - ["tmpfs", "/var/log", "tmpfs", "defaults,noatime,nosuid,mode=0755,size=256m", "0", "0"]
+  - ["tmpfs", "/tmp", "tmpfs", "defaults,noatime,nosuid,size=50m", "0", "0"]
+  - ["tmpfs", "/var/tmp", "tmpfs", "defaults,noatime,nosuid,size=20m", "0", "0"]
+  - ["tmpfs", "/var/log", "tmpfs", "defaults,noatime,nosuid,mode=0755,size=50m", "0", "0"]
 
 locale: en_US.UTF-8
 timezone: Europe/Paris
