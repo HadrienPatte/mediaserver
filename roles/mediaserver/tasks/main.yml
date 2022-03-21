@@ -1,14 +1,37 @@
 ---
-- name: Install podman
-  apt:
-    package: podman
+- name: Add docker key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    keyring: /usr/share/keyrings/docker-archive-keyring.gpg
     state: present
+
+- name: Add docker repository
+  apt_repository:
+    repo: deb [arch=arm64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+    state: present
+
+- name: Install docker
+  apt:
+    name:
+      - docker-ce
+      - docker-compose
+    state: present
+
+- name: Configure docker
+  copy:
+    src: daemon.json
+    dest: /etc/docker/
+  notify:
+    - Restart docker
 
 - name: Install the datadog agent
   include_role:
     name: datadog.datadog
   vars:
-    datadog_additional_groups: adm
+    datadog_additional_groups:
+      - adm
+      - docker
+      - systemd-journal
     datadog_config:
       logs_enabled: true
       process_config:
@@ -16,17 +39,12 @@
       apm_config:
         enabled: false
     datadog_checks:
-      container:
-        init_config:
-        instances:
-      systemd:
-        init_config:
-        instances:
-          - unit_names:
-              - cron.service
-              - datadog-agent.service
-              - ssh.service
-              - unattended-upgrades.service
+      auth:
+        logs:
+          - type: file
+            path: /var/log/auth.log
+            service: auth
+            source: auth
       cloud-init:
         logs:
           - type: file
@@ -38,9 +56,23 @@
               - type: multi_line
                 name: new_log_start_with_date
                 pattern: \d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\,\d{3}
-      auth:
+      container:
+        init_config:
+        instances:
+      docker:
+        init_config:
+        instances:
+      journald:
         logs:
-          - type: file
-            path: /var/log/auth.log
-            service: auth
-            source: auth
+          - type: journald
+            container_mode: true
+      systemd:
+        init_config:
+        instances:
+          - unit_names:
+              - cron.service
+              - datadog-agent.service
+              - docker.service
+              - docker.socket
+              - ssh.service
+              - unattended-upgrades.service
