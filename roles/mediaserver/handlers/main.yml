@@ -3,3 +3,8 @@
   systemd:
     name: docker
     state: restarted
+
+- name: Restart homer
+  systemd:
+    name: homer
+    state: restarted

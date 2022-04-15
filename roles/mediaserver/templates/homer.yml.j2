@@ -1,0 +1,45 @@
+---
+title: "Mediaserver"
+subtitle: ""
+icon: "fab fa-raspberry-pi"
+
+header: true
+footer: false
+links: []
+
+columns: 3 # "auto" or number (must be a factor of 12: 1, 2, 3, 4, 6, 12)
+connectivityCheck: true # whether you want to display a message when the apps are not accessible anymore (VPN disconnected for example)
+
+services:
+  - name: "Applications"
+    icon: "fas fa-play"
+    items:
+      - name: Radarr
+        subtitle: ""
+        url: http://{{ ansible_host }}:7878
+        logo: http://{{ ansible_host }}:7878/Content/Images/logo.svg
+
+      - name: Sonarr
+        subtitle: ""
+        url: http://{{ ansible_host }}:8989
+        logo: http://{{ ansible_host }}:8989/Content/Images/logo.svg
+
+      - name: qBittorrent
+        subtitle: ""
+        url: http://{{ ansible_host }}:8080
+        logo: http://{{ ansible_host }}:8080/icons/qbittorrent-tray.svg
+
+      - name: Jackett
+        subtitle: ""
+        url: http://{{ ansible_host }}:9117
+        logo: http://{{ ansible_host }}:9117/jacket_medium.png
+
+      - name: Jellyfin
+        subtitle: ""
+        url: http://{{ ansible_host }}:8096
+        logo: http://{{ ansible_host }}:8096/web/assets/img/icon-transparent.png
+
+      - name: Datadog
+        subtitle: ""
+        url: https://app.datadoghq.com
+        logo: https://static.datadoghq.com/static/c/bits_reversed-570337bd5ba02fd91283e8932d0298df.svg

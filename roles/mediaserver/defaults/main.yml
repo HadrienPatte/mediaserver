@@ -1,0 +1,33 @@
+containers:
+  - name: homer
+    image: docker.io/b4bz/homer
+    version: latest
+    ports:
+      - 80:8080
+    volumes:
+      - /etc/homer/config.yml:/www/assets/config.yml:ro
+  - name: radarr
+    image: cr.hotio.dev/hotio/radarr
+    version: latest
+    ports:
+      - 7878:7878
+  - name: sonarr
+    image: cr.hotio.dev/hotio/sonarr
+    version: latest
+    ports:
+      - 8989:8989
+  - name: qbittorrent
+    image: cr.hotio.dev/hotio/qbittorrent
+    version: latest
+    ports:
+      - 8080:8080
+  - name: prowlarr
+    image: cr.hotio.dev/hotio/prowlarr
+    version: testing
+    ports:
+      - 9696:9696
+  - name: jellyfin
+    image: cr.hotio.dev/hotio/jellyfin
+    version: latest
+    ports:
+      - 8096:8096

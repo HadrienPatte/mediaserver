@@ -1,3 +1,8 @@
 {
-  "log-driver": "journald"
+  "log-driver": "local",
+  "log-opts": {
+    "max-size": "2m",
+    "max-file": "1",
+    "compress": "false"
+  }
 }
