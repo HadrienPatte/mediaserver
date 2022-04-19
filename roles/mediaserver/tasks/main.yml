@@ -28,6 +28,7 @@
   include_role:
     name: datadog.datadog
   vars:
+    datadog_api_key: "{{ secrets.api_keys['datadog'] }}"
     datadog_additional_groups:
       - adm
       - docker
@@ -89,16 +90,35 @@
               - ssh.service
               - unattended-upgrades.service
 
-- name: Create homer config directory
+- name: Create config directories
   file:
-    path: /etc/homer
+    path: /etc/{{ item.name }}
     state: directory
+  loop: "{{ containers }}"
+  loop_control:
+    label: "{{ item.name }}"
 
 - name: Create homer config file
   template:
     src: homer.yml.j2
     dest: /etc/homer/config.yml
   notify: Restart homer
+
+- name: Create config files
+  template:
+    src: config.xml.j2
+    dest: /etc/{{ item.name }}/config.xml
+  loop: "{{ containers }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when: "'xml_config' in item.flags"
+  notify: Restart {{ item.name }}
+
+- name: Create a network
+  docker_network:
+    name: mediaserver
+    driver: bridge
+    state: present
 
 - name: Create and configure containers
   include_role:
@@ -112,10 +132,14 @@
       - com.datadoghq.tags.service={{ item.name }}
       - com.datadoghq.tags.version={{ item.version }}
     container_docker_pull: true
-    container_ports: "{{ item.ports | default([]) }}"
+    container_ports:
+      - "{{ '80' if item.name == 'homer' else item.port }}:{{ item.port }}"
+    container_network: "mediaserver"
     container_env:
       PUID: "1000"
       PGID: "1000"
       TZ: "Europe/Paris"
     container_volumes: "{{ item.volumes | default([]) + ['/etc/localtime:/etc/localtime:ro'] }}"
   loop: "{{ containers }}"
+  loop_control:
+    label: "{{ item.name }}"

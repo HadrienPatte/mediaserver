@@ -8,3 +8,18 @@
   systemd:
     name: homer
     state: restarted
+
+- name: Restart radarr
+  systemd:
+    name: radarr
+    state: restarted
+
+- name: Restart sonarr
+  systemd:
+    name: sonarr
+    state: restarted
+
+- name: Restart prowlarr
+  systemd:
+    name: prowlarr
+    state: restarted

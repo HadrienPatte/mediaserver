@@ -1,0 +1,12 @@
+<Config>
+  <LogLevel>debug</LogLevel>
+  <BindAddress>*</BindAddress>
+  <EnableSsl>False</EnableSsl>
+  <Port>{{ item.port }}</Port>
+  <UrlBase></UrlBase>
+  <ApiKey>{{ secrets.api_keys[item.name] }}</ApiKey>
+  <AuthenticationMethod>None</AuthenticationMethod>
+  <UpdateMechanism>Docker</UpdateMechanism>
+  <LaunchBrowser>True</LaunchBrowser>
+  <AnalyticsEnabled>False</AnalyticsEnabled>
+</Config>
