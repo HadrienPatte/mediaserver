@@ -75,7 +75,9 @@
             exclude_units:
               - homer.service
               - radarr.service
+              - radarr-exportarr.service
               - sonarr.service
+              - sonarr-exportarr.service
               - qbittorrent.service
               - prowlarr.service
               - jellyfin.service
@@ -89,6 +91,19 @@
               - docker.socket
               - ssh.service
               - unattended-upgrades.service
+      openmetrics:
+        init_config:
+        instances:
+          - openmetrics_endpoint: http://localhost:9707/metrics
+            namespace: sonarr
+            raw_metric_prefix: sonarr_
+            metrics:
+              - .+
+          - openmetrics_endpoint: http://localhost:9708/metrics
+            namespace: radarr
+            raw_metric_prefix: radarr_
+            metrics:
+              - .+
 
 - name: Create config directories
   file:
@@ -143,3 +158,34 @@
   loop: "{{ containers }}"
   loop_control:
     label: "{{ item.name }}"
+
+- name: Create and configure exportarr containers
+  include_role:
+    name: mhutter.docker-systemd-service
+  vars:
+    service_name: "{{ item.name }}-exportarr"
+    container_name: "{{ item.name }}-exportarr"
+    container_image: "{{ exportarr.image }}:{{ exportarr.version }}"
+    container_labels:
+      - com.datadoghq.tags.env=prod
+      - com.datadoghq.tags.service={{ item.name }}-exportarr
+      - com.datadoghq.tags.version={{ exportarr.version }}
+    container_docker_pull: true
+    container_cmd:
+      - "{{ item.name }}"
+    container_ports:
+      - "127.0.0.1:{{ item.exportarr.port }}:{{ item.exportarr.port }}"
+    container_network: "mediaserver"
+    container_env:
+      PORT: "{{ item.exportarr.port }}"
+      URL: "http://{{ item.name }}:{{ item.port }}"
+      APIKEY: "{{ secrets.api_keys[item.name] }}"
+      PUID: "1000"
+      PGID: "1000"
+      TZ: "Europe/Paris"
+    container_volumes:
+      - /etc/localtime:/etc/localtime:ro
+  loop: "{{ containers }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when: "'exportarr' in item.flags"

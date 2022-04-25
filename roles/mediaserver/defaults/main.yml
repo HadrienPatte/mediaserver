@@ -13,8 +13,11 @@ containers:
     port: 7878
     volumes:
       - /etc/radarr:/config
+    exportarr:
+      port: 9708
     flags:
       - xml_config
+      - exportarr
 
   - name: sonarr
     image: cr.hotio.dev/hotio/sonarr
@@ -22,8 +25,11 @@ containers:
     port: 8989
     volumes:
       - /etc/sonarr:/config
+    exportarr:
+      port: 9707
     flags:
       - xml_config
+      - exportarr
 
   - name: qbittorrent
     image: cr.hotio.dev/hotio/qbittorrent
@@ -50,3 +56,7 @@ containers:
     volumes:
       - /etc/jellyfin:/config
     flags: []
+
+exportarr:
+  image: ghcr.io/onedr0p/exportarr
+  version: v1.0.0
