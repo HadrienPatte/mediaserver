@@ -15,31 +15,31 @@ services:
     icon: "fas fa-play"
     items:
       - name: Radarr
-        subtitle: ""
+        type: Radarr
+        apikey: {{ secrets.api_keys["radarr"] }}
         url: http://{{ ansible_host }}:7878
         logo: http://{{ ansible_host }}:7878/Content/Images/logo.svg
 
       - name: Sonarr
-        subtitle: ""
+        type: Sonarr
+        apikey: {{ secrets.api_keys["sonarr"] }}
         url: http://{{ ansible_host }}:8989
         logo: http://{{ ansible_host }}:8989/Content/Images/logo.svg
 
       - name: qBittorrent
-        subtitle: ""
         url: http://{{ ansible_host }}:8080
         logo: http://{{ ansible_host }}:8080/icons/qbittorrent-tray.svg
 
       - name: Prowlarr
-        subtitle: ""
+        type: Prowlarr
+        apikey: {{ secrets.api_keys["prowlarr"] }}
         url: http://{{ ansible_host }}:9696
         logo: http://{{ ansible_host }}:9696/Content/Images/logo.svg
 
       - name: Jellyfin
-        subtitle: ""
         url: http://{{ ansible_host }}:8096
         logo: http://{{ ansible_host }}:8096/web/assets/img/icon-transparent.png
 
       - name: Datadog
-        subtitle: ""
         url: https://app.datadoghq.com
         logo: https://static.datadoghq.com/static/c/bits_reversed-570337bd5ba02fd91283e8932d0298df.svg
