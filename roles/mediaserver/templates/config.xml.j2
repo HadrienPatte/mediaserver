@@ -2,9 +2,9 @@
   <LogLevel>debug</LogLevel>
   <BindAddress>*</BindAddress>
   <EnableSsl>False</EnableSsl>
-  <Port>{{ item.port }}</Port>
+  <Port>{{ item.value.port }}</Port>
   <UrlBase></UrlBase>
-  <ApiKey>{{ secrets.api_keys[item.name] }}</ApiKey>
+  <ApiKey>{{ secrets.api_keys[item.key] }}</ApiKey>
   <AuthenticationMethod>None</AuthenticationMethod>
   <UpdateMechanism>Docker</UpdateMechanism>
   <LaunchBrowser>True</LaunchBrowser>

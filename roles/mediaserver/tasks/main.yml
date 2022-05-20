@@ -107,11 +107,11 @@
 
 - name: Create config directories
   file:
-    path: /etc/{{ item.name }}
+    path: /etc/{{ item.key }}
     state: directory
-  loop: "{{ containers }}"
+  with_dict: "{{ containers }}"
   loop_control:
-    label: "{{ item.name }}"
+    label: "{{ item.key }}"
 
 - name: Create homer config file
   template:
@@ -122,12 +122,12 @@
 - name: Create config files
   template:
     src: config.xml.j2
-    dest: /etc/{{ item.name }}/config.xml
-  loop: "{{ containers }}"
+    dest: /etc/{{ item.key }}/config.xml
+  with_dict: "{{ containers }}"
   loop_control:
-    label: "{{ item.name }}"
-  when: "'xml_config' in item.flags"
-  notify: Restart {{ item.name }}
+    label: "{{ item.key }}"
+  when: "'xml_config' in item.value.flags"
+  notify: Restart {{ item.key }}
 
 - name: Create a network
   docker_network:
@@ -139,53 +139,53 @@
   include_role:
     name: mhutter.docker-systemd-service
   vars:
-    service_name: "{{ item.name }}"
-    container_name: "{{ item.name }}"
-    container_image: "{{ item.image }}:{{ item.version }}"
+    service_name: "{{ item.key }}"
+    container_name: "{{ item.key }}"
+    container_image: "{{ item.value.image }}:{{ item.value.version }}"
     container_labels:
       - com.datadoghq.tags.env=prod
-      - com.datadoghq.tags.service={{ item.name }}
-      - com.datadoghq.tags.version={{ item.version }}
+      - com.datadoghq.tags.service={{ item.key }}
+      - com.datadoghq.tags.version={{ item.value.version }}
     container_docker_pull: true
     container_ports:
-      - "{{ '80' if item.name == 'homer' else item.port }}:{{ item.port }}"
+      - "{{ '80' if item.key == 'homer' else item.value.port }}:{{ item.value.port }}"
     container_network: "mediaserver"
     container_env:
       PUID: "1000"
       PGID: "1000"
       TZ: "Europe/Paris"
-    container_volumes: "{{ item.volumes | default([]) + ['/etc/localtime:/etc/localtime:ro'] }}"
-  loop: "{{ containers }}"
+    container_volumes: "{{ item.value.volumes | default([]) + ['/etc/localtime:/etc/localtime:ro'] }}"
+  with_dict: "{{ containers }}"
   loop_control:
-    label: "{{ item.name }}"
+    label: "{{ item.key }}"
 
 - name: Create and configure exportarr containers
   include_role:
     name: mhutter.docker-systemd-service
   vars:
-    service_name: "{{ item.name }}-exportarr"
-    container_name: "{{ item.name }}-exportarr"
+    service_name: "{{ item.key }}-exportarr"
+    container_name: "{{ item.key }}-exportarr"
     container_image: "{{ exportarr.image }}:{{ exportarr.version }}"
     container_labels:
       - com.datadoghq.tags.env=prod
-      - com.datadoghq.tags.service={{ item.name }}-exportarr
+      - com.datadoghq.tags.service={{ item.key }}-exportarr
       - com.datadoghq.tags.version={{ exportarr.version }}
     container_docker_pull: true
     container_cmd:
-      - "{{ item.name }}"
+      - "{{ item.key }}"
     container_ports:
-      - "127.0.0.1:{{ item.exportarr.port }}:{{ item.exportarr.port }}"
+      - "127.0.0.1:{{ item.value.exportarr.port }}:{{ item.value.exportarr.port }}"
     container_network: "mediaserver"
     container_env:
-      PORT: "{{ item.exportarr.port }}"
-      URL: "http://{{ item.name }}:{{ item.port }}"
-      APIKEY: "{{ secrets.api_keys[item.name] }}"
+      PORT: "{{ item.value.exportarr.port }}"
+      URL: "http://{{ item.key }}:{{ item.value.port }}"
+      APIKEY: "{{ secrets.api_keys[item.key] }}"
       PUID: "1000"
       PGID: "1000"
       TZ: "Europe/Paris"
     container_volumes:
       - /etc/localtime:/etc/localtime:ro
-  loop: "{{ containers }}"
+  with_dict: "{{ containers }}"
   loop_control:
-    label: "{{ item.name }}"
-  when: "'exportarr' in item.flags"
+    label: "{{ item.key }}"
+  when: "'exportarr' in item.value.flags"

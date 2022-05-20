@@ -1,5 +1,5 @@
 containers:
-  - name: homer
+  homer:
     image: docker.io/b4bz/homer
     version: latest
     port: 8080
@@ -7,7 +7,7 @@ containers:
       - /etc/homer/config.yml:/www/assets/config.yml:ro
     flags: []
 
-  - name: radarr
+  radarr:
     image: cr.hotio.dev/hotio/radarr
     version: latest
     port: 7878
@@ -19,7 +19,7 @@ containers:
       - xml_config
       - exportarr
 
-  - name: sonarr
+  sonarr:
     image: cr.hotio.dev/hotio/sonarr
     version: latest
     port: 8989
@@ -31,7 +31,7 @@ containers:
       - xml_config
       - exportarr
 
-  - name: qbittorrent
+  qbittorrent:
     image: cr.hotio.dev/hotio/qbittorrent
     version: latest
     port: 8080
@@ -39,7 +39,7 @@ containers:
       - /etc/qbittorrent:/config
     flags: []
 
-  - name: prowlarr
+  prowlarr:
     image: cr.hotio.dev/hotio/prowlarr
     version: testing
     port: 9696
@@ -48,11 +48,10 @@ containers:
     flags:
       - xml_config
 
-  - name: jellyfin
+  jellyfin:
     image: cr.hotio.dev/hotio/jellyfin
     version: latest
     port: 8096
-    test: true
     volumes:
       - /etc/jellyfin:/config
     flags: []
