@@ -1,4 +1,12 @@
 containers:
+  nginx:
+    image: docker.io/library/nginx
+    version: latest
+    port: 80
+    volumes:
+      - /etc/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    flags: []
+
   homer:
     image: docker.io/b4bz/homer
     version: latest
@@ -31,14 +39,6 @@ containers:
       - xml_config
       - exportarr
 
-  qbittorrent:
-    image: cr.hotio.dev/hotio/qbittorrent
-    version: latest
-    port: 8080
-    volumes:
-      - /etc/qbittorrent:/config
-    flags: []
-
   prowlarr:
     image: cr.hotio.dev/hotio/prowlarr
     version: testing
@@ -48,6 +48,14 @@ containers:
     flags:
       - xml_config
 
+  qbittorrent:
+    image: cr.hotio.dev/hotio/qbittorrent
+    version: latest
+    port: 8888
+    volumes:
+      - /etc/qbittorrent:/config
+    flags: []
+  
   jellyfin:
     image: cr.hotio.dev/hotio/jellyfin
     version: latest

@@ -3,7 +3,7 @@
   <BindAddress>*</BindAddress>
   <EnableSsl>False</EnableSsl>
   <Port>{{ item.value.port }}</Port>
-  <UrlBase></UrlBase>
+  <UrlBase>{{ item.key }}</UrlBase>
   <ApiKey>{{ secrets.api_keys[item.key] }}</ApiKey>
   <AuthenticationMethod>None</AuthenticationMethod>
   <UpdateMechanism>Docker</UpdateMechanism>

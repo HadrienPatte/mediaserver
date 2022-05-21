@@ -17,14 +17,14 @@ services:
       - name: Radarr
         type: Radarr
         apikey: {{ secrets.api_keys["radarr"] }}
-        url: http://{{ ansible_host }}:{{ containers.radarr.port }}
-        logo: http://{{ ansible_host }}:{{ containers.radarr.port }}/Content/Images/logo.svg
+        url: http://{{ ansible_host }}/radarr
+        logo: http://{{ ansible_host }}/radarr/Content/Images/logo.png
 
       - name: Sonarr
         type: Sonarr
         apikey: {{ secrets.api_keys["sonarr"] }}
-        url: http://{{ ansible_host }}:{{ containers.sonarr.port }}
-        logo: http://{{ ansible_host }}:{{ containers.sonarr.port }}/Content/Images/logo.svg
+        url: http://{{ ansible_host }}/sonarr
+        logo: http://{{ ansible_host }}/sonarr/Content/Images/logo.svg
 
       - name: qBittorrent
         url: http://{{ ansible_host }}:{{ containers.qbittorrent.port }}
@@ -33,8 +33,8 @@ services:
       - name: Prowlarr
         type: Prowlarr
         apikey: {{ secrets.api_keys["prowlarr"] }}
-        url: http://{{ ansible_host }}:{{ containers.prowlarr.port }}
-        logo: http://{{ ansible_host }}:{{ containers.prowlarr.port }}/Content/Images/logo.svg
+        url: http://{{ ansible_host }}/prowlarr
+        logo: http://{{ ansible_host }}/prowlarr/Content/Images/logo.svg
 
       - name: Jellyfin
         url: http://{{ ansible_host }}:{{ containers.jellyfin.port }}

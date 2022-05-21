@@ -119,6 +119,12 @@
     dest: /etc/homer/config.yml
   notify: Restart homer
 
+- name: Create nginx config file
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+  notify: Restart nginx
+
 - name: Create config files
   template:
     src: config.xml.j2
@@ -148,12 +154,13 @@
       - com.datadoghq.tags.version={{ item.value.version }}
     container_docker_pull: true
     container_ports:
-      - "{{ '80' if item.key == 'homer' else item.value.port }}:{{ item.value.port }}"
+      - "{{ item.value.port }}:{{ item.value.port }}"
     container_network: "mediaserver"
     container_env:
       PUID: "1000"
       PGID: "1000"
       TZ: "Europe/Paris"
+      WEBUI_PORTS: "{{ containers.qbittorrent.port }}"
     container_volumes: "{{ item.value.volumes | default([]) + ['/etc/localtime:/etc/localtime:ro'] }}"
   with_dict: "{{ containers }}"
   loop_control:
@@ -178,7 +185,7 @@
     container_network: "mediaserver"
     container_env:
       PORT: "{{ item.value.exportarr.port }}"
-      URL: "http://{{ item.key }}:{{ item.value.port }}"
+      URL: "http://{{ item.key }}:{{ item.value.port }}/{{ item.key }}"
       APIKEY: "{{ secrets.api_keys[item.key] }}"
       PUID: "1000"
       PGID: "1000"
