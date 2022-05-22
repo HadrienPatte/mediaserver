@@ -73,6 +73,7 @@
           - type: journald
             container_mode: true
             exclude_units:
+              - nginx.service
               - homer.service
               - radarr.service
               - radarr-exportarr.service
@@ -94,12 +95,12 @@
       openmetrics:
         init_config:
         instances:
-          - openmetrics_endpoint: http://localhost:9707/metrics
+          - openmetrics_endpoint: http://localhost:{{ containers.sonarr.exportarr.port }}/metrics
             namespace: sonarr
             raw_metric_prefix: sonarr_
             metrics:
               - .+
-          - openmetrics_endpoint: http://localhost:9708/metrics
+          - openmetrics_endpoint: http://localhost:{{ containers.radarr.exportarr.port }}/metrics
             namespace: radarr
             raw_metric_prefix: radarr_
             metrics:
