@@ -10,11 +10,12 @@
     repo: deb [arch=arm64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
     state: present
 
-- name: Install docker
+- name: Install packages
   apt:
     name:
       - docker-ce
       - docker-compose
+      - python3-lxml
     state: present
 
 - name: Configure docker
@@ -127,14 +128,11 @@
   notify: Restart nginx
 
 - name: Create config files
-  template:
-    src: config.xml.j2
-    dest: /etc/{{ item.key }}/config.xml
+  include_tasks: xml_config.yml
   with_dict: "{{ containers }}"
   loop_control:
     label: "{{ item.key }}"
   when: "'xml_config' in item.value.flags"
-  notify: Restart {{ item.key }}
 
 - name: Create a network
   docker_network:
@@ -196,4 +194,4 @@
   with_dict: "{{ containers }}"
   loop_control:
     label: "{{ item.key }}"
-  when: "'exportarr' in item.value.flags"
+  when: "item.value.exportarr | default(false)"

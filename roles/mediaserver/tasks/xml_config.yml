@@ -1,0 +1,31 @@
+---
+- name: Check if {{ item.key }} config file exists
+  stat:
+    path: /etc/{{ item.key }}/config.xml
+  register: config_file
+
+- name: Create {{ item.key }} config file
+  copy:
+    dest: /etc/{{ item.key }}/config.xml
+    content: "<Config/>"
+  when: not config_file.stat.exists
+
+- name: Configure {{ item.key }}
+  xml:
+    path: /etc/{{ item.key }}/config.xml
+    xpath: /Config/{{ param.key }}
+    value: "{{ param.value }}"
+  loop:
+    - key: LogLevel
+      value: debug
+    - key: Port
+      value: "{{ item.value.port }}"
+    - key: UrlBase
+      value: "{{ item.key }}"
+    - key: ApiKey
+      value: "{{ secrets.api_keys[item.key] }}"
+    - key: AnalyticsEnabled
+      value: "false"
+  loop_control:
+    loop_var: param
+  notify: Restart {{ item.key }}

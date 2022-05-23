@@ -27,7 +27,6 @@ containers:
     flags:
       - xml_config
       - proxy
-      - exportarr
 
   sonarr:
     image: cr.hotio.dev/hotio/sonarr
@@ -40,7 +39,6 @@ containers:
     flags:
       - xml_config
       - proxy
-      - exportarr
 
   prowlarr:
     image: cr.hotio.dev/hotio/prowlarr
