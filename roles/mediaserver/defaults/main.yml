@@ -13,6 +13,7 @@ containers:
     port: 8080
     volumes:
       - /etc/homer/config.yml:/www/assets/config.yml:ro
+      - /etc/homer/lighttpd.conf:/lighttpd.conf:ro
     flags:
       - proxy
 

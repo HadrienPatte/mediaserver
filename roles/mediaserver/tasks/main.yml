@@ -83,16 +83,10 @@
               - qbittorrent.service
               - prowlarr.service
               - jellyfin.service
-      systemd:
+      lighttpd:
         init_config:
         instances:
-          - unit_names:
-              - cron.service
-              - datadog-agent.service
-              - docker.service
-              - docker.socket
-              - ssh.service
-              - unattended-upgrades.service
+          - lighttpd_status_url: http://localhost:{{ containers.homer.port }}/lighttpd-status?auto
       openmetrics:
         init_config:
         instances:
@@ -106,6 +100,16 @@
             raw_metric_prefix: radarr_
             metrics:
               - .+
+      systemd:
+        init_config:
+        instances:
+          - unit_names:
+              - cron.service
+              - datadog-agent.service
+              - docker.service
+              - docker.socket
+              - ssh.service
+              - unattended-upgrades.service
 
 - name: Create config directories
   file:
@@ -119,6 +123,12 @@
   template:
     src: homer.yml.j2
     dest: /etc/homer/config.yml
+  notify: Restart homer
+
+- name: Create homer lighttpd config file
+  copy:
+    src: lighttpd.conf
+    dest: /etc/homer/
   notify: Restart homer
 
 - name: Create nginx config file
