@@ -9,6 +9,7 @@
     dest: /etc/{{ item.key }}/config.xml
     content: "<Config/>"
   when: not config_file.stat.exists
+  notify: Restart {{ item.key }}
 
 - name: Configure {{ item.key }}
   xml:

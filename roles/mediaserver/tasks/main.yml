@@ -144,6 +144,30 @@
     label: "{{ item.key }}"
   when: "'xml_config' in item.value.flags"
 
+- name: Check if jellyfin config file exists
+  stat:
+    path: /etc/jellyfin/system.xml
+  register: jellyfin_config_file
+
+- name: Create jellyfin config file
+  copy:
+    dest: /etc/jellyfin/system.xml
+    content: "<ServerConfiguration/>"
+  when: not jellyfin_config_file.stat.exists
+  notify: Restart jellyfin
+
+- name: Configure jellyfin
+  xml:
+    path: /etc/jellyfin/system.xml
+    xpath: /ServerConfiguration/{{ item.key }}
+    value: "{{ item.value }}"
+  loop:
+    - key: PublicPort
+      value: "{{ containers['jellyfin'].port }}"
+    - key: HttpServerPortNumber
+      value: "{{ containers['jellyfin'].port }}"
+  notify: Restart jellyfin
+
 - name: Create a network
   docker_network:
     name: mediaserver

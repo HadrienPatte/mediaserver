@@ -28,3 +28,8 @@
   systemd:
     name: prowlarr
     state: restarted
+
+- name: Restart jellyfin
+  systemd:
+    name: jellyfin
+    state: restarted
