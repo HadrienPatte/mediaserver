@@ -1,35 +1,42 @@
 ---
 - name: Restart docker
+  become: true
   systemd:
     name: docker
     state: restarted
 
 - name: Restart nginx
+  become: true
   systemd:
     name: nginx
     state: restarted
 
 - name: Restart homer
+  become: true
   systemd:
     name: homer
     state: restarted
 
 - name: Restart radarr
+  become: true
   systemd:
     name: radarr
     state: restarted
 
 - name: Restart sonarr
+  become: true
   systemd:
     name: sonarr
     state: restarted
 
 - name: Restart prowlarr
+  become: true
   systemd:
     name: prowlarr
     state: restarted
 
 - name: Restart jellyfin
+  become: true
   systemd:
     name: jellyfin
     state: restarted

@@ -1,16 +1,19 @@
 ---
 - name: Add docker key
+  become: true
   apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg
     keyring: /usr/share/keyrings/docker-archive-keyring.gpg
     state: present
 
 - name: Add docker repository
+  become: true
   apt_repository:
     repo: deb [arch=arm64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
     state: present
 
 - name: Install packages
+  become: true
   apt:
     name:
       - docker-ce
@@ -19,6 +22,7 @@
     state: present
 
 - name: Configure docker
+  become: true
   copy:
     src: daemon.json
     dest: /etc/docker/
@@ -29,6 +33,7 @@
   include_role:
     name: datadog.datadog
   vars:
+    ansible_become: true
     datadog_api_key: "{{ secrets.api_keys['datadog'] }}"
     datadog_additional_groups:
       - adm
@@ -120,9 +125,12 @@
               - unattended-upgrades.service
 
 - name: Create config directories
+  become: true
   file:
     path: /etc/{{ item.key }}
     state: directory
+    owner: "{{ ansible_facts.user_uid }}"
+    group: "{{ ansible_facts.user_gid }}"
   with_dict: "{{ containers }}"
   loop_control:
     label: "{{ item.key }}"
@@ -179,6 +187,7 @@
   notify: Restart jellyfin
 
 - name: Create a network
+  become: true
   docker_network:
     name: mediaserver
     driver: bridge
@@ -188,6 +197,7 @@
   include_role:
     name: mhutter.docker-systemd-service
   vars:
+    ansible_become: true
     service_name: "{{ item.key }}"
     container_name: "{{ item.key }}"
     container_image: "{{ item.value.image }}:{{ item.value.version }}"
@@ -200,8 +210,8 @@
       - "{{ item.value.port }}:{{ item.value.port }}"
     container_network: "mediaserver"
     container_env:
-      PUID: "1000"
-      PGID: "1000"
+      PUID: "{{ ansible_facts.user_uid }}"
+      PGID: "{{ ansible_facts.user_gid }}"
       TZ: "Europe/Paris"
       WEBUI_PORTS: "{{ containers.qbittorrent.port }}"
     container_volumes: "{{ item.value.volumes | default([]) + ['/etc/localtime:/etc/localtime:ro'] }}"
@@ -213,6 +223,7 @@
   include_role:
     name: mhutter.docker-systemd-service
   vars:
+    ansible_become: true
     service_name: "{{ item.key }}-exportarr"
     container_name: "{{ item.key }}-exportarr"
     container_image: "{{ exportarr.image }}:{{ exportarr.version }}"
@@ -230,8 +241,8 @@
       PORT: "{{ item.value.exportarr.port }}"
       URL: "http://{{ item.key }}:{{ item.value.port }}/{{ item.key }}"
       APIKEY: "{{ secrets.api_keys[item.key] }}"
-      PUID: "1000"
-      PGID: "1000"
+      PUID: "{{ ansible_facts.user_uid }}"
+      PGID: "{{ ansible_facts.user_gid }}"
       TZ: "Europe/Paris"
     container_volumes:
       - /etc/localtime:/etc/localtime:ro
