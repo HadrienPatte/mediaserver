@@ -33,16 +33,19 @@ write_files:
 
   - path: /etc/logrotate.conf
     content: |
+      # use the syslog group by default, since this is the owning group of /var/log.
+      su root syslog
+
+      # purge logs everyday
+      rotate 0
       daily
-
-      # use the adm group by default, since this is the owning group
-      # of /var/log/syslog.
-      su root adm
-
-      # keep logs one day
-      rotate 1
 
       # create new (empty) log files after rotating old ones
       create
 
-      /var/log/**/*.log {}
+      /var/log/* {
+        postrotate
+          /usr/lib/rsyslog/rsyslog-rotate
+        endscript
+      }
+      /var/log/**/* {}
