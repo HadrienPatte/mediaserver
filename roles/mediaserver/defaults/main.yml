@@ -1,45 +1,38 @@
 containers:
   nginx:
     image: docker.io/library/nginx
-    version: latest
     port: 80
+    expose_port: true
     volumes:
       - /etc/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-    flags: []
 
   homer:
     image: docker.io/b4bz/homer
-    version: latest
     port: 8080
     volumes:
       - /etc/homer/config.yml:/www/assets/config.yml:ro
       - /etc/homer/lighttpd.conf:/lighttpd.conf:ro
-    flags:
-      - proxy
+    proxy: true
 
   radarr:
     image: cr.hotio.dev/hotio/radarr
-    version: latest
     port: 7878
     volumes:
       - /etc/radarr:/config
     exportarr:
       port: 9708
-    flags:
-      - xml_config
-      - proxy
+    proxy: true
+    arr_config: true
 
   sonarr:
     image: cr.hotio.dev/hotio/sonarr
-    version: latest
     port: 8989
     volumes:
       - /etc/sonarr:/config
     exportarr:
       port: 9707
-    flags:
-      - xml_config
-      - proxy
+    proxy: true
+    arr_config: true
 
   prowlarr:
     image: cr.hotio.dev/hotio/prowlarr
@@ -47,25 +40,30 @@ containers:
     port: 9696
     volumes:
       - /etc/prowlarr:/config
-    flags:
-      - xml_config
-      - proxy
+    proxy: true
+    arr_config: true
 
   qbittorrent:
     image: cr.hotio.dev/hotio/qbittorrent
-    version: latest
     port: 8888
+    expose_port: true
     volumes:
       - /etc/qbittorrent:/config
-    flags: []
   
   jellyfin:
     image: cr.hotio.dev/hotio/jellyfin
-    version: latest
     port: 8096
+    expose_port: true
     volumes:
       - /etc/jellyfin:/config
-    flags: []
+
+default:
+  version: latest
+  proxy: false
+  arr_config: false
+  expose_port: false
+  volumes:
+    - /etc/localtime:/etc/localtime:ro
 
 exportarr:
   image: ghcr.io/onedr0p/exportarr

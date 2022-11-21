@@ -5,7 +5,7 @@ server {
   server_name {{ ansible_host }};
 {% for name in containers %}
 {% set container = containers[name] %}
-{% if 'proxy' in container.flags %}
+{% if container.proxy %}
 
   location /{% if name != 'homer' %}{{ name }}{% endif %} {
     proxy_pass http://{{ name }}:{{ container.port }}/{% if name != 'homer' %}{{ name }}{% endif %};
