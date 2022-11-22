@@ -40,6 +40,8 @@ containers:
     port: 9696
     volumes:
       - /etc/prowlarr:/config
+    exportarr:
+      port: 9710
     proxy: true
     arr_config: true
 
@@ -67,4 +69,4 @@ default:
 
 exportarr:
   image: ghcr.io/onedr0p/exportarr
-  version: v1.0.0
+  version: master

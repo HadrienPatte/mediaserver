@@ -117,8 +117,9 @@
               - radarr-exportarr.service
               - sonarr.service
               - sonarr-exportarr.service
-              - qbittorrent.service
               - prowlarr.service
+              - prowlarr-exportarr.service
+              - qbittorrent.service
               - jellyfin.service
       lighttpd:
         init_config:
@@ -135,6 +136,11 @@
           - openmetrics_endpoint: http://localhost:{{ containers.radarr.exportarr.port }}/metrics
             namespace: radarr
             raw_metric_prefix: radarr_
+            metrics:
+              - .+
+          - openmetrics_endpoint: http://localhost:{{ containers.prowlarr.exportarr.port }}/metrics
+            namespace: prowlarr
+            raw_metric_prefix: prowlarr_
             metrics:
               - .+
           - openmetrics_endpoint: http://localhost:{{ containers.jellyfin.port }}/metrics
