@@ -125,6 +125,10 @@
         init_config:
         instances:
           - lighttpd_status_url: http://localhost:{{ containers.homer.port }}/lighttpd-status?auto
+      nginx:
+        init_config:
+        instances:
+          - nginx_status_url: http://localhost:{{ containers.nginx.port }}/nginx-status/
       openmetrics:
         init_config:
         instances:
@@ -161,6 +165,14 @@
               - docker.socket
               - ssh.service
               - unattended-upgrades.service
+
+- name: Create a network
+  become: true
+  docker_network:
+    name: mediaserver
+    driver: bridge
+    state: present
+  register: network_result
 
 - name: Create config directories
   become: true
@@ -223,13 +235,6 @@
     - key: EnableMetrics
       value: "true"
   notify: Restart jellyfin
-
-- name: Create a network
-  become: true
-  docker_network:
-    name: mediaserver
-    driver: bridge
-    state: present
 
 - name: Create and configure containers
   include_role:

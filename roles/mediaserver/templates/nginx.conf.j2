@@ -3,6 +3,17 @@ server {
   listen [::]:80;
 
   server_name {{ ansible_host }};
+
+  location /nginx-status {
+    # only allow connections from the docker host (the datadog-agent)
+    allow {{ network_result.ansible_facts.docker_network.IPAM.Config[0].Gateway }};
+    deny all;
+
+    stub_status;
+
+    # ensures the version information can be retrieved
+    server_tokens on;
+  }
 {% for name in containers %}
 {% set container = containers[name] %}
 {% if container.proxy %}
