@@ -15,3 +15,6 @@ configure: mount
 
 ansible:
 	ansible-playbook -i inventory.yml playbook.yml
+
+ansible-deps:
+	ansible-galaxy role install -r roles/requirements.yml
