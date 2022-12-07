@@ -105,6 +105,11 @@
       container:
       disk:
         instances:
+          - use_mount: true
+            all_partitions: true
+            excluded_filesystems:
+              - overlay
+              - nsfs
       docker:
       journald:
         logs:
