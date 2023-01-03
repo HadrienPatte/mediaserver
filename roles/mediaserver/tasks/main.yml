@@ -71,6 +71,7 @@
       - adm
       - docker
       - systemd-journal
+      - dialout
     datadog_config:
       logs_enabled: true
       listeners:
@@ -110,7 +111,12 @@
             excluded_filesystems:
               - overlay
               - nsfs
+      custom_atmospheric:
+        init_config:
+        instances: [{}]
       docker:
+        init_config:
+        instances: [{}]
       journald:
         logs:
           - type: journald
@@ -170,6 +176,25 @@
               - docker.socket
               - ssh.service
               - unattended-upgrades.service
+
+- name: Install I2C/BME280 dependencies in datadog embedded python
+  become: true
+  pip:
+    name:
+      - smbus2
+      - RPi.bme280
+    state: present
+    executable: /opt/datadog-agent/embedded/bin/pip
+  notify: restart datadog-agent
+
+- name: Create custom atmospheric check
+  become: true
+  copy:
+    src: custom_atmospheric.py
+    dest: /etc/datadog-agent/checks.d/
+    owner: dd-agent
+    group: dd-agent
+  notify: restart datadog-agent
 
 - name: Create a network
   become: true
