@@ -1,3 +1,4 @@
+---
 containers:
   nginx:
     image: docker.io/library/nginx
@@ -51,7 +52,7 @@ containers:
     expose_port: true
     volumes:
       - /etc/qbittorrent:/config
-  
+
   jellyfin:
     image: cr.hotio.dev/hotio/jellyfin
     port: 8096

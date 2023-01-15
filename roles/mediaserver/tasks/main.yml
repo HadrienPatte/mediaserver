@@ -5,14 +5,14 @@
       default({}) |
       combine({
         item.key : item.value |
-        combine({ 
+        combine({
           'version' : item.value.version | default(default.version),
           'proxy' : item.value.proxy | default(default.proxy),
           'arr_config' : item.value.arr_config | default(default.arr_config),
           'expose_port' : item.value.expose_port | default(default.expose_port),
           'container_volumes' : item.value.volumes | default([]) + default.volumes,
         })
-      }) 
+      })
     }}"
   with_dict: "{{ containers }}"
   no_log: true
@@ -22,11 +22,11 @@
     containers: "{{ containers |
       combine({
         item.key : item.value |
-        combine({ 
+        combine({
           'container_image' : item.value.image + ':' + item.value.version,
           'container_port' : ('' if item.value.expose_port else '127.0.0.1:') + item.value.port | string + ':' + item.value.port | string,
         })
-      }) 
+      })
     }}"
   with_dict: "{{ containers }}"
   no_log: true
