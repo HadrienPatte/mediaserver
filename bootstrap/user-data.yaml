@@ -26,10 +26,16 @@ package_reboot_if_required: true
 
 write_files:
   - path: /etc/update-motd.d/10-help-text
-    content: ""
+    content: |
+      #!/bin/sh
+      exit
+    permissions: 0755
 
   - path: /etc/update-motd.d/50-motd-news
-    content: ""
+    content: |
+      #!/bin/sh
+      exit
+    permissions: 0755
 
   - path: /etc/logrotate.conf
     content: |
