@@ -1,42 +1,42 @@
 ---
 - name: Restart docker
   become: true
-  systemd:
+  ansible.builtin.systemd:
     name: docker
     state: restarted
 
 - name: Restart nginx
   become: true
-  systemd:
+  ansible.builtin.systemd:
     name: nginx
     state: restarted
 
 - name: Restart homer
   become: true
-  systemd:
+  ansible.builtin.systemd:
     name: homer
     state: restarted
 
 - name: Restart radarr
   become: true
-  systemd:
+  ansible.builtin.systemd:
     name: radarr
     state: restarted
 
 - name: Restart sonarr
   become: true
-  systemd:
+  ansible.builtin.systemd:
     name: sonarr
     state: restarted
 
 - name: Restart prowlarr
   become: true
-  systemd:
+  ansible.builtin.systemd:
     name: prowlarr
     state: restarted
 
 - name: Restart jellyfin
   become: true
-  systemd:
+  ansible.builtin.systemd:
     name: jellyfin
     state: restarted

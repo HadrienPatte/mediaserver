@@ -1,18 +1,19 @@
 ---
-- name: Check if {{ item.key }} config file exists
-  stat:
+- name: Check if config file exists for {{ item.key }}
+  ansible.builtin.stat:
     path: /etc/{{ item.key }}/config.xml
   register: config_file
 
-- name: Create {{ item.key }} config file
-  copy:
+- name: Create config file for {{ item.key }}
+  ansible.builtin.copy:
     dest: /etc/{{ item.key }}/config.xml
     content: "<Config/>"
+    mode: 0600
   when: not config_file.stat.exists
   notify: Restart {{ item.key }}
 
 - name: Configure {{ item.key }}
-  xml:
+  community.general.xml:
     path: /etc/{{ item.key }}/config.xml
     xpath: /Config/{{ param.key }}
     value: "{{ param.value }}"

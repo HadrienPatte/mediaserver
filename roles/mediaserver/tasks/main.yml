@@ -1,52 +1,47 @@
 ---
 - name: Set default values
-  set_fact:
-    containers: "{{ containers |
-      default({}) |
-      combine({
-        item.key : item.value |
-        combine({
-          'version' : item.value.version | default(default.version),
-          'proxy' : item.value.proxy | default(default.proxy),
-          'arr_config' : item.value.arr_config | default(default.arr_config),
-          'expose_port' : item.value.expose_port | default(default.expose_port),
-          'container_volumes' : item.value.volumes | default([]) + default.volumes,
-        })
+  ansible.builtin.set_fact:
+    containers: "{{ containers | default({}) | combine({
+      item.key: item.value
+      | combine({
+        'version': item.value.version | default(default.version),
+        'proxy': item.value.proxy | default(default.proxy),
+        'arr_config': item.value.arr_config | default(default.arr_config),
+        'expose_port': item.value.expose_port | default(default.expose_port),
+        'container_volumes': item.value.volumes | default([]) + default.volumes,
       })
-    }}"
+    }) }}"
   with_dict: "{{ containers }}"
   no_log: true
 
 - name: Set computed values
-  set_fact:
-    containers: "{{ containers |
-      combine({
-        item.key : item.value |
-        combine({
-          'container_image' : item.value.image + ':' + item.value.version,
-          'container_port' : ('' if item.value.expose_port else '127.0.0.1:') + item.value.port | string + ':' + item.value.port | string,
-        })
+  ansible.builtin.set_fact:
+    containers: "{{ containers | combine({
+      item.key: item.value
+      | combine({
+        'container_image': item.value.image + ':' + item.value.version,
+        'container_port': ('' if item.value.expose_port else '127.0.0.1:') + item.value.port | string + ':' + item.value.port | string,
       })
-    }}"
+    }) }}"
   with_dict: "{{ containers }}"
   no_log: true
 
 - name: Add docker key
   become: true
-  apt_key:
+  ansible.builtin.apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg
     keyring: /usr/share/keyrings/docker-archive-keyring.gpg
     state: present
 
 - name: Add docker repository
   become: true
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: deb [arch=arm64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
     state: present
 
 - name: Install packages
   become: true
-  apt:
+  ansible.builtin.apt:
     name:
       - docker-ce
       - docker-compose
@@ -55,14 +50,15 @@
 
 - name: Configure docker
   become: true
-  copy:
+  ansible.builtin.copy:
     src: daemon.json
     dest: /etc/docker/
+    mode: 0600
   notify:
     - Restart docker
 
 - name: Install the datadog agent
-  include_role:
+  ansible.builtin.include_role:
     name: datadog.datadog
   vars:
     ansible_become: true
@@ -179,7 +175,7 @@
 
 - name: Install I2C/BME280 dependencies in datadog embedded python
   become: true
-  pip:
+  ansible.builtin.pip:
     name:
       - smbus2
       - RPi.bme280
@@ -189,16 +185,17 @@
 
 - name: Create custom atmospheric check
   become: true
-  copy:
+  ansible.builtin.copy:
     src: custom_atmospheric.py
     dest: /etc/datadog-agent/checks.d/
+    mode: 0644
     owner: dd-agent
     group: dd-agent
   notify: restart datadog-agent
 
 - name: Create a network
   become: true
-  docker_network:
+  community.docker.docker_network:
     name: mediaserver
     driver: bridge
     state: present
@@ -206,9 +203,10 @@
 
 - name: Create config directories
   become: true
-  file:
+  ansible.builtin.file:
     path: /etc/{{ item.key }}
     state: directory
+    mode: 0755
     owner: "{{ ansible_facts.user_uid }}"
     group: "{{ ansible_facts.user_gid }}"
   with_dict: "{{ containers }}"
@@ -216,44 +214,48 @@
     label: "{{ item.key }}"
 
 - name: Create homer config file
-  template:
+  ansible.builtin.template:
     src: homer.yml.j2
     dest: /etc/homer/config.yml
+    mode: 0600
   notify: Restart homer
 
 - name: Create homer lighttpd config file
-  copy:
+  ansible.builtin.copy:
     src: lighttpd.conf
     dest: /etc/homer/
+    mode: 0600
   notify: Restart homer
 
 - name: Create nginx config file
-  template:
+  ansible.builtin.template:
     src: nginx.conf.j2
     dest: /etc/nginx/nginx.conf
+    mode: 0600
   notify: Restart nginx
 
 - name: Create config files
-  include_tasks: xml_config.yml
+  ansible.builtin.include_tasks: xml_config.yml
   with_dict: "{{ containers }}"
   loop_control:
     label: "{{ item.key }}"
   when: item.value.arr_config
 
 - name: Check if jellyfin config file exists
-  stat:
+  ansible.builtin.stat:
     path: /etc/jellyfin/system.xml
   register: jellyfin_config_file
 
 - name: Create jellyfin config file
-  copy:
+  ansible.builtin.copy:
     dest: /etc/jellyfin/system.xml
     content: "<ServerConfiguration/>"
+    mode: 0600
   when: not jellyfin_config_file.stat.exists
   notify: Restart jellyfin
 
 - name: Configure jellyfin
-  xml:
+  community.general.xml:
     path: /etc/jellyfin/system.xml
     xpath: /ServerConfiguration/{{ item.key }}
     value: "{{ item.value }}"
@@ -267,7 +269,7 @@
   notify: Restart jellyfin
 
 - name: Create and configure containers
-  include_role:
+  ansible.builtin.include_role:
     name: mhutter.docker-systemd-service
   vars:
     ansible_become: true
@@ -293,7 +295,7 @@
     label: "{{ item.key }}"
 
 - name: Create and configure exportarr containers
-  include_role:
+  ansible.builtin.include_role:
     name: mhutter.docker-systemd-service
   vars:
     ansible_become: true
