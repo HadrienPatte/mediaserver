@@ -6,7 +6,7 @@ server {
 
   location /nginx-status {
     # only allow connections from the docker host (the datadog-agent)
-    allow {{ network_result.ansible_facts.docker_network.IPAM.Config[0].Gateway }};
+    allow {{ network_result.network.IPAM.Config[0].Gateway }};
     deny all;
 
     stub_status;
