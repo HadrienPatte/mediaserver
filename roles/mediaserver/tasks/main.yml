@@ -162,6 +162,11 @@
             collect_counters_with_distributions: true
             metrics:
               - .+
+      reboot_required:
+        init_config:
+        instances:
+          - reboot_signal_file: /run/reboot-required
+            created_at_file: /opt/datadog-agent/reboot-required.created_at
       systemd:
         init_config:
         instances:
@@ -173,12 +178,13 @@
               - ssh.service
               - unattended-upgrades.service
 
-- name: Install I2C/BME280 dependencies in datadog embedded python
+- name: Install I2C/BME280 dependencies and additionnal integrations in datadog embedded python
   become: true
   ansible.builtin.pip:
     name:
       - smbus2
       - RPi.bme280
+      - git+https://github.com/DataDog/integrations-extras.git@9a8436a623cc1a8af01c10df1047bf8d55572588#subdirectory=reboot_required
     state: present
     executable: /opt/datadog-agent/embedded/bin/pip
   notify: restart datadog-agent
