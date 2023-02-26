@@ -1,0 +1,142 @@
+---
+- name: Install the datadog agent
+  ansible.builtin.include_role:
+    name: datadog.datadog
+  vars:
+    ansible_become: true
+    datadog_api_key: "{{ secrets.api_keys['datadog'] }}"
+    datadog_additional_groups:
+      - adm
+      - docker
+      - systemd-journal
+      - dialout
+    datadog_config:
+      logs_enabled: true
+      listeners:
+        - name: docker
+      config_providers:
+        - name: docker
+          polling: true
+      logs_config:
+        container_collect_all: true
+      process_config:
+        enabled: true
+      apm_config:
+        enabled: false
+    datadog_checks:
+      auth:
+        logs:
+          - type: file
+            path: /var/log/auth.log
+            service: auth
+            source: auth
+      cloud-init:
+        logs:
+          - type: file
+            path: /var/log/cloud-init.log
+            service: cloud-init
+            source: cloud-init
+            start_position: beginning
+            log_processing_rules:
+              - type: multi_line
+                name: new_log_start_with_date
+                pattern: \d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\,\d{3}
+      container:
+      disk:
+        instances:
+          - use_mount: true
+            all_partitions: true
+            excluded_filesystems:
+              - overlay
+              - nsfs
+      custom_atmospheric:
+        init_config:
+        instances: [{}]
+      docker:
+        init_config:
+        instances: [{}]
+      journald:
+        logs:
+          - type: journald
+            container_mode: true
+            exclude_units:
+              - nginx.service
+              - homer.service
+              - radarr.service
+              - radarr-exportarr.service
+              - sonarr.service
+              - sonarr-exportarr.service
+              - prowlarr.service
+              - prowlarr-exportarr.service
+              - qbittorrent.service
+              - jellyfin.service
+      lighttpd:
+        init_config:
+        instances:
+          - lighttpd_status_url: http://localhost:{{ containers.homer.port }}/lighttpd-status?auto
+      nginx:
+        init_config:
+        instances:
+          - nginx_status_url: http://localhost:{{ containers.nginx.port }}/nginx-status/
+      openmetrics:
+        init_config:
+        instances:
+          - openmetrics_endpoint: http://localhost:{{ containers.sonarr.exportarr.port }}/metrics
+            namespace: sonarr
+            raw_metric_prefix: sonarr_
+            metrics:
+              - .+
+          - openmetrics_endpoint: http://localhost:{{ containers.radarr.exportarr.port }}/metrics
+            namespace: radarr
+            raw_metric_prefix: radarr_
+            metrics:
+              - .+
+          - openmetrics_endpoint: http://localhost:{{ containers.prowlarr.exportarr.port }}/metrics
+            namespace: prowlarr
+            raw_metric_prefix: prowlarr_
+            metrics:
+              - .+
+          - openmetrics_endpoint: http://localhost:{{ containers.jellyfin.port }}/metrics
+            namespace: jellyfin
+            collect_histogram_buckets: true
+            non_cumulative_histogram_buckets: true
+            histogram_buckets_as_distributions: true
+            collect_counters_with_distributions: true
+            metrics:
+              - .+
+      reboot_required:
+        init_config:
+        instances:
+          - reboot_signal_file: /run/reboot-required
+            created_at_file: /opt/datadog-agent/reboot-required.created_at
+      systemd:
+        init_config:
+        instances:
+          - unit_names:
+              - cron.service
+              - datadog-agent.service
+              - docker.service
+              - docker.socket
+              - ssh.service
+              - unattended-upgrades.service
+
+- name: Install I2C/BME280 dependencies and additionnal integrations in datadog embedded python
+  become: true
+  ansible.builtin.pip:
+    name:
+      - smbus2
+      - RPi.bme280
+      - git+https://github.com/DataDog/integrations-extras.git@9a8436a623cc1a8af01c10df1047bf8d55572588#subdirectory=reboot_required
+    state: present
+    executable: /opt/datadog-agent/embedded/bin/pip
+  notify: restart datadog-agent
+
+- name: Create custom atmospheric check
+  become: true
+  ansible.builtin.copy:
+    src: custom_atmospheric.py
+    dest: /etc/datadog-agent/checks.d/
+    mode: 0644
+    owner: dd-agent
+    group: dd-agent
+  notify: restart datadog-agent
