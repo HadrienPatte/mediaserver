@@ -2,10 +2,10 @@
 
 ## Setup
 
-Download [ubuntu image](https://ubuntu.com/download/raspberry-pi) and extract it in [ubuntu](./ubuntu):
+Download [ubuntu image](https://ubuntu.com/download/raspberry-pi) and extract it in [bootstrap](./bootstrap):
 
 ```
-xz -d ubuntu/ubuntu-22.04.1-preinstalled-server-arm64+raspi.img.xz
+xz -d bootstrap/ubuntu-22.04.2-preinstalled-server-arm64+raspi.img.xz
 ```
 
 # Hardware setup
