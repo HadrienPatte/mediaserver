@@ -23,6 +23,8 @@
         enabled: true
       apm_config:
         enabled: false
+    datadog_custom_checks:
+      custom_atmospheric: custom_atmospheric.py
     datadog_checks:
       auth:
         logs:
@@ -129,14 +131,4 @@
       - git+https://github.com/DataDog/integrations-extras.git@9a8436a623cc1a8af01c10df1047bf8d55572588#subdirectory=reboot_required
     state: present
     executable: /opt/datadog-agent/embedded/bin/pip
-  notify: restart datadog-agent
-
-- name: Create custom atmospheric check
-  become: true
-  ansible.builtin.copy:
-    src: custom_atmospheric.py
-    dest: /etc/datadog-agent/checks.d/
-    mode: 0644
-    owner: dd-agent
-    group: dd-agent
   notify: restart datadog-agent
