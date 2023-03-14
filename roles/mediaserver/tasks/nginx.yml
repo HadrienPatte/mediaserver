@@ -1,0 +1,29 @@
+---
+- name: Install nginx
+  become: true
+  ansible.builtin.apt:
+    name:
+      - nginx
+
+- name: Remove default site
+  become: true
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: Restart nginx
+
+- name: Copy mediaserver site config
+  become: true
+  ansible.builtin.template:
+    src: mediaserver.conf.j2
+    dest: /etc/nginx/sites-available/mediaserver.conf
+    mode: 0600
+  notify: Restart nginx
+
+- name: Enable mediaserver site
+  become: true
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/mediaserver.conf
+    dest: /etc/nginx/sites-enabled/mediaserver.conf
+    state: link
+  notify: Restart nginx

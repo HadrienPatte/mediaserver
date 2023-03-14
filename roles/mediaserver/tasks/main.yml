@@ -60,13 +60,15 @@
 - name: Install and configure the datadog agent
   ansible.builtin.include_tasks: datadog.yml
 
+- name: Install and configure nginx
+  ansible.builtin.include_tasks: nginx.yml
+
 - name: Create a network
   become: true
   community.docker.docker_network:
     name: mediaserver
     driver: bridge
     state: present
-  register: network_result
 
 - name: Create config directories
   become: true
@@ -93,13 +95,6 @@
     dest: /etc/homer/
     mode: 0600
   notify: Restart homer
-
-- name: Create nginx config file
-  ansible.builtin.template:
-    src: nginx.conf.j2
-    dest: /etc/nginx/nginx.conf
-    mode: 0600
-  notify: Restart nginx
 
 - name: Create config files
   ansible.builtin.include_tasks: xml_config.yml

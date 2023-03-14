@@ -5,8 +5,8 @@ server {
   server_name {{ ansible_host }};
 
   location /nginx-status {
-    # only allow connections from the docker host (the datadog-agent)
-    allow {{ network_result.network.IPAM.Config[0].Gateway }};
+    # only allow local connections from the datadog-agent
+    allow 127.0.0.1;
     deny all;
 
     stub_status;
@@ -19,7 +19,7 @@ server {
 {% if container.proxy %}
 
   location /{% if name != 'homer' %}{{ name }}{% endif %} {
-    proxy_pass http://{{ name }}:{{ container.port }}/{% if name != 'homer' %}{{ name }}{% endif %};
+    proxy_pass http://localhost:{{ container.port }}/{% if name != 'homer' %}{{ name }}{% endif %};
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-for $proxy_add_x_forwarded_for;
     proxy_set_header Host $host;

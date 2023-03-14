@@ -1,12 +1,5 @@
 ---
 containers:
-  nginx:
-    image: docker.io/library/nginx
-    port: 80
-    expose_port: true
-    volumes:
-      - /etc/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-
   homer:
     image: docker.io/b4bz/homer
     port: 8080

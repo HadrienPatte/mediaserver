@@ -79,7 +79,7 @@
       nginx:
         init_config:
         instances:
-          - nginx_status_url: http://localhost:{{ containers.nginx.port }}/nginx-status/
+          - nginx_status_url: http://localhost/nginx-status/
       openmetrics:
         init_config:
         instances:
