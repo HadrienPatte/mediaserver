@@ -14,12 +14,17 @@ server {
     # ensures the version information can be retrieved
     server_tokens on;
   }
+
+  location / {
+    root /var/www/html;
+  }
+
 {% for name in containers %}
 {% set container = containers[name] %}
 {% if container.proxy %}
 
-  location /{% if name != 'homer' %}{{ name }}{% endif %} {
-    proxy_pass http://localhost:{{ container.port }}/{% if name != 'homer' %}{{ name }}{% endif %};
+  location /{{ name }} {
+    proxy_pass http://localhost:{{ container.port }}/{{ name }};
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-for $proxy_add_x_forwarded_for;
     proxy_set_header Host $host;

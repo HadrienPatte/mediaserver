@@ -1,13 +1,5 @@
 ---
 containers:
-  homer:
-    image: docker.io/b4bz/homer
-    port: 8080
-    volumes:
-      - /etc/homer/config.yml:/www/assets/config.yml:ro
-      - /etc/homer/lighttpd.conf:/lighttpd.conf:ro
-    proxy: true
-
   radarr:
     image: cr.hotio.dev/hotio/radarr
     port: 7878

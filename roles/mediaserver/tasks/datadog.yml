@@ -72,10 +72,6 @@
               - prowlarr-exportarr.service
               - qbittorrent.service
               - jellyfin.service
-      lighttpd:
-        init_config:
-        instances:
-          - lighttpd_status_url: http://localhost:{{ containers.homer.port }}/lighttpd-status?auto
       nginx:
         init_config:
         instances:

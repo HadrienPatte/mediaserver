@@ -45,7 +45,8 @@
     name:
       - docker-ce
       - docker-compose
-      - python3-lxml
+      - python3-lxml  # Necessary for the community.general.xml module
+      - unzip  # Necessary for the ansible.builtin.unarchive module
     state: present
 
 - name: Configure docker
@@ -81,20 +82,6 @@
   with_dict: "{{ containers }}"
   loop_control:
     label: "{{ item.key }}"
-
-- name: Create homer config file
-  ansible.builtin.template:
-    src: homer.yml.j2
-    dest: /etc/homer/config.yml
-    mode: 0600
-  notify: Restart homer
-
-- name: Create homer lighttpd config file
-  ansible.builtin.copy:
-    src: lighttpd.conf
-    dest: /etc/homer/
-    mode: 0600
-  notify: Restart homer
 
 - name: Create config files
   ansible.builtin.include_tasks: xml_config.yml

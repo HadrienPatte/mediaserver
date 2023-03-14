@@ -5,6 +5,33 @@
     name:
       - nginx
 
+- name: Create static assets directory
+  become: true
+  ansible.builtin.file:
+    path: /var/www/html
+    state: directory
+    mode: 0755
+    owner: www-data
+    group: www-data
+
+- name: Install homer assets
+  become: true
+  ansible.builtin.unarchive:
+    src: https://github.com/bastienwirtz/homer/releases/download/v23.02.2/homer.zip
+    dest: /var/www/html
+    remote_src: "yes"
+    owner: www-data
+    group: www-data
+
+- name: Create homer config file
+  become: true
+  ansible.builtin.template:
+    src: homer.yml.j2
+    dest: /var/www/html/assets/config.yml
+    mode: 0600
+    owner: www-data
+    group: www-data
+
 - name: Remove default site
   become: true
   ansible.builtin.file:

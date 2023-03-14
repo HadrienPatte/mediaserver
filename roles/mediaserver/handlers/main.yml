@@ -11,12 +11,6 @@
     name: nginx
     state: restarted
 
-- name: Restart homer
-  become: true
-  ansible.builtin.systemd:
-    name: homer
-    state: restarted
-
 - name: Restart radarr
   become: true
   ansible.builtin.systemd:
