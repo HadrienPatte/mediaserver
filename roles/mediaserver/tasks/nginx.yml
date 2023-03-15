@@ -5,20 +5,24 @@
     name:
       - nginx
 
-- name: Create static assets directory
+- name: Create static assets directories
   become: true
   ansible.builtin.file:
-    path: /var/www/html
+    path: "{{ item }}"
     state: directory
     mode: 0755
     owner: www-data
     group: www-data
+  with_items:
+    - /var/www/html
+    - /var/www/html/homer
+    - /var/www/html/theme.park
 
 - name: Install homer assets
   become: true
   ansible.builtin.unarchive:
     src: https://github.com/bastienwirtz/homer/releases/download/v23.02.2/homer.zip
-    dest: /var/www/html
+    dest: /var/www/html/homer
     remote_src: "yes"
     owner: www-data
     group: www-data
@@ -27,8 +31,17 @@
   become: true
   ansible.builtin.template:
     src: homer.yml.j2
-    dest: /var/www/html/assets/config.yml
+    dest: /var/www/html/homer/assets/config.yml
     mode: 0600
+    owner: www-data
+    group: www-data
+
+- name: Download theme.park CSS themes
+  become: true
+  ansible.builtin.unarchive:
+    src: https://github.com/GilbN/theme.park/archive/refs/tags/1.13.6.zip
+    dest: /var/www/html/theme.park
+    remote_src: "yes"
     owner: www-data
     group: www-data
 
