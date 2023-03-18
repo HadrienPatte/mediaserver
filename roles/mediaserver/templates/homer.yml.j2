@@ -27,8 +27,9 @@ services:
         logo: http://{{ ansible_host }}/sonarr/Content/Images/logo.svg
 
       - name: qBittorrent
-        url: http://{{ ansible_host }}:{{ containers.qbittorrent.port }}
-        logo: http://{{ ansible_host }}:{{ containers.qbittorrent.port }}/images/qbittorrent-tray.svg
+        type: qBittorrent
+        url: http://{{ ansible_host }}/qbittorrent
+        logo: http://{{ ansible_host }}/qbittorrent/images/qbittorrent-tray.svg
 
       - name: Prowlarr
         type: Prowlarr

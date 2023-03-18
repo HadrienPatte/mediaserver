@@ -7,7 +7,6 @@ containers:
       - /etc/radarr:/config
     exportarr:
       port: 9708
-    proxy: true
     arr_config: true
 
   sonarr:
@@ -17,7 +16,6 @@ containers:
       - /etc/sonarr:/config
     exportarr:
       port: 9707
-    proxy: true
     arr_config: true
 
   prowlarr:
@@ -28,15 +26,18 @@ containers:
       - /etc/prowlarr:/config
     exportarr:
       port: 9710
-    proxy: true
     arr_config: true
 
   qbittorrent:
-    image: cr.hotio.dev/hotio/qbittorrent
-    port: 8888
-    expose_port: true
+    image: ghcr.io/onedr0p/qbittorrent
+    version: rolling
+    port: 8585
+    env:
+      QBITTORRENT__PORT: "8585"
+      QBT_BitTorrent__Session__DefaultSavePath: /data/downloads
+      QBT_BitTorrent__Session__GlobalMaxSeedingMinutes: "1"
     volumes:
-      - /etc/qbittorrent:/config
+      - /data/downloads:/data/downloads
 
   jellyfin:
     image: cr.hotio.dev/hotio/jellyfin
@@ -47,7 +48,6 @@ containers:
 
 default:
   version: latest
-  proxy: false
   arr_config: false
   expose_port: false
   volumes:

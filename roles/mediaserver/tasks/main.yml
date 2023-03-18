@@ -5,9 +5,9 @@
       item.key: item.value
       | combine({
         'version': item.value.version | default(default.version),
-        'proxy': item.value.proxy | default(default.proxy),
         'arr_config': item.value.arr_config | default(default.arr_config),
         'expose_port': item.value.expose_port | default(default.expose_port),
+        'container_env': item.value.env | default({}),
         'container_volumes': item.value.volumes | default([]) + default.volumes,
       })
     }) }}"
@@ -133,11 +133,7 @@
     container_ports:
       - "{{ item.value.container_port }}"
     container_network: "mediaserver"
-    container_env:
-      PUID: "{{ ansible_facts.user_uid }}"
-      PGID: "{{ ansible_facts.user_gid }}"
-      TZ: "Europe/Paris"
-      WEBUI_PORTS: "{{ containers.qbittorrent.port }}"
+    container_env: "{{ item.value.container_env }}"
     container_volumes: "{{ item.value.container_volumes }}"
   with_dict: "{{ containers }}"
   loop_control:
