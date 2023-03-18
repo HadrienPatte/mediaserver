@@ -27,7 +27,7 @@ server {
 {% set container = containers[name] %}
 
   location /{{ name }}/ {
-    proxy_pass http://localhost:{{ container.port }}/;
+    proxy_pass http://localhost:{{ container.port }}/{% if name != "qbittorrent" %}{{ name }}/{% endif %};
 
     proxy_http_version 1.1;
     proxy_set_header Upgrade $http_upgrade;

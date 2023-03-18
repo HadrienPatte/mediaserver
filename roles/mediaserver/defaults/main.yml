@@ -1,36 +1,38 @@
 ---
 containers:
   radarr:
-    image: cr.hotio.dev/hotio/radarr
+    image: ghcr.io/onedr0p/radarr
     port: 7878
     volumes:
-      - /etc/radarr:/config
+      - /data/radarr.db:/config/radarr.db
+      - /data/radarr.db-wal:/config/radarr.db-wal
+      - /cache/radarr:/config/MediaCover
+      - /data:/data
     exportarr:
       port: 9708
-    arr_config: true
 
   sonarr:
-    image: cr.hotio.dev/hotio/sonarr
+    image: ghcr.io/onedr0p/sonarr
     port: 8989
     volumes:
-      - /etc/sonarr:/config
+      - /data/sonarr.db:/config/sonarr.db
+      - /data/sonarr.db-wal:/config/sonarr.db-wal
+      - /cache/sonarr:/config/MediaCover
+      - /data:/data
     exportarr:
       port: 9707
-    arr_config: true
 
   prowlarr:
-    image: cr.hotio.dev/hotio/prowlarr
-    version: testing
+    image: ghcr.io/onedr0p/prowlarr-develop
     port: 9696
     volumes:
-      - /etc/prowlarr:/config
+      - /data/prowlarr.db:/config/prowlarr.db
+      - /data/prowlarr.db-wal:/config/prowlarr.db-wal
     exportarr:
       port: 9710
-    arr_config: true
 
   qbittorrent:
     image: ghcr.io/onedr0p/qbittorrent
-    version: rolling
     port: 8585
     env:
       QBITTORRENT__PORT: "8585"
@@ -41,17 +43,15 @@ containers:
 
   jellyfin:
     image: cr.hotio.dev/hotio/jellyfin
+    version: latest
     port: 8096
     expose_port: true
     volumes:
       - /etc/jellyfin:/config
 
 default:
-  version: latest
-  arr_config: false
+  version: rolling
   expose_port: false
-  volumes:
-    - /etc/localtime:/etc/localtime:ro
 
 exportarr:
   image: ghcr.io/onedr0p/exportarr
