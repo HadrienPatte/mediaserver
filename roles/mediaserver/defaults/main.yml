@@ -42,16 +42,13 @@ containers:
       - /data/downloads:/data/downloads
 
   jellyfin:
-    image: cr.hotio.dev/hotio/jellyfin
-    version: latest
+    image: ghcr.io/onedr0p/jellyfin
     port: 8096
-    expose_port: true
     volumes:
       - /etc/jellyfin:/config
 
 default:
   version: rolling
-  expose_port: false
 
 exportarr:
   image: ghcr.io/onedr0p/exportarr

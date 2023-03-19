@@ -5,7 +5,6 @@
       item.key: item.value
       | combine({
         'version': item.value.version | default(default.version),
-        'expose_port': item.value.expose_port | default(default.expose_port),
         'container_volumes': item.value.volumes | default([]),
         'exportarr': item.value.exportarr | default({}),
       })
@@ -19,7 +18,7 @@
       item.key: item.value
       | combine({
         'container_image': item.value.image + ':' + item.value.version,
-        'container_port': ('' if item.value.expose_port else '127.0.0.1:') + item.value.port | string + ':' + item.value.port | string,
+        'container_port': '127.0.0.1:' + item.value.port | string + ':' + item.value.port | string,
         'container_env': item.value.env | default({}) | combine({
           item.key | upper + '__API_KEY': secrets.api_keys[item.key],
           item.key | upper + '__LOG_LEVEL': 'debug',
@@ -92,33 +91,10 @@
   with_items:
     - /data
     - /cache
-
-- name: Check if jellyfin config file exists
-  ansible.builtin.stat:
-    path: /etc/jellyfin/system.xml
-  register: jellyfin_config_file
-
-- name: Create jellyfin config file
-  ansible.builtin.copy:
-    dest: /etc/jellyfin/system.xml
-    content: "<ServerConfiguration/>"
-    mode: 0600
-  when: not jellyfin_config_file.stat.exists
-  notify: Restart jellyfin
+    - /etc/jellyfin
 
 - name: Configure jellyfin
-  community.general.xml:
-    path: /etc/jellyfin/system.xml
-    xpath: /ServerConfiguration/{{ item.key }}
-    value: "{{ item.value }}"
-  loop:
-    - key: PublicPort
-      value: "{{ containers['jellyfin'].port }}"
-    - key: HttpServerPortNumber
-      value: "{{ containers['jellyfin'].port }}"
-    - key: EnableMetrics
-      value: "true"
-  notify: Restart jellyfin
+  ansible.builtin.include_tasks: jellyfin.yml
 
 - name: Create and configure containers
   ansible.builtin.include_role:

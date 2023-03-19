@@ -38,8 +38,10 @@ services:
         logo: http://{{ ansible_host }}/prowlarr/Content/Images/logo.svg
 
       - name: Jellyfin
-        url: http://{{ ansible_host }}:{{ containers.jellyfin.port }}
-        logo: http://{{ ansible_host }}:{{ containers.jellyfin.port }}/web/assets/img/icon-transparent.png
+        type: Emby
+        libraryType: series
+        url: http://{{ ansible_host }}/jellyfin
+        logo: http://{{ ansible_host }}/jellyfin/web/assets/img/icon-transparent.png
 
       - name: Datadog
         url: https://app.datadoghq.com

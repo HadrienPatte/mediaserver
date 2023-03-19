@@ -104,7 +104,7 @@
             raw_metric_prefix: prowlarr_
             metrics:
               - .+
-          - openmetrics_endpoint: http://localhost:{{ containers.jellyfin.port }}/metrics
+          - openmetrics_endpoint: http://localhost:{{ containers.jellyfin.port }}/jellyfin/metrics
             namespace: jellyfin
             collect_histogram_buckets: true
             non_cumulative_histogram_buckets: true
