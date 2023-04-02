@@ -8,8 +8,6 @@ containers:
       - /data/radarr.db-wal:/config/radarr.db-wal
       - /cache/radarr:/config/MediaCover
       - /data:/data
-    exportarr:
-      port: 9708
 
   sonarr:
     image: ghcr.io/onedr0p/sonarr
@@ -19,8 +17,6 @@ containers:
       - /data/sonarr.db-wal:/config/sonarr.db-wal
       - /cache/sonarr:/config/MediaCover
       - /data:/data
-    exportarr:
-      port: 9707
 
   prowlarr:
     image: ghcr.io/onedr0p/prowlarr-develop
@@ -28,8 +24,6 @@ containers:
     volumes:
       - /data/prowlarr.db:/config/prowlarr.db
       - /data/prowlarr.db-wal:/config/prowlarr.db-wal
-    exportarr:
-      port: 9710
 
   qbittorrent:
     image: ghcr.io/onedr0p/qbittorrent
@@ -49,7 +43,3 @@ containers:
 
 default:
   version: rolling
-
-exportarr:
-  image: ghcr.io/onedr0p/exportarr
-  version: master

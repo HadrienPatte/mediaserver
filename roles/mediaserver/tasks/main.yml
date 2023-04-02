@@ -24,7 +24,7 @@
           item.key | upper + '__LOG_LEVEL': 'debug',
           item.key | upper + '__URL_BASE': item.key,
           item.key | upper + '__ANALYTICS_ENABLED': 'False',
-        } if item.value.exportarr | length > 0 else {}),
+        } if 'arr' in item.key else {}),
       })
     }) }}"
   with_dict: "{{ containers }}"
@@ -117,35 +117,3 @@
   with_dict: "{{ containers }}"
   loop_control:
     label: "{{ item.key }}"
-
-- name: Create and configure exportarr containers
-  ansible.builtin.include_role:
-    name: mhutter.docker-systemd-service
-  vars:
-    ansible_become: true
-    service_name: "{{ item.key }}-exportarr"
-    container_name: "{{ item.key }}-exportarr"
-    container_image: "{{ exportarr.image }}:{{ exportarr.version }}"
-    container_labels:
-      - com.datadoghq.tags.env=prod
-      - com.datadoghq.tags.service={{ item.key }}-exportarr
-      - com.datadoghq.tags.version={{ exportarr.version }}
-    container_docker_pull: true
-    container_cmd:
-      - "{{ item.key }}"
-    container_ports:
-      - "127.0.0.1:{{ item.value.exportarr.port }}:{{ item.value.exportarr.port }}"
-    container_network: "mediaserver"
-    container_env:
-      PORT: "{{ item.value.exportarr.port }}"
-      URL: "http://{{ item.key }}:{{ item.value.port }}/{{ item.key }}"
-      APIKEY: "{{ secrets.api_keys[item.key] }}"
-      PUID: "{{ ansible_facts.user_uid }}"
-      PGID: "{{ ansible_facts.user_gid }}"
-      TZ: "Europe/Paris"
-    container_volumes:
-      - /etc/localtime:/etc/localtime:ro
-  with_dict: "{{ containers }}"
-  loop_control:
-    label: "{{ item.key }}"
-  when: "item.value.exportarr | default(false)"

@@ -62,14 +62,9 @@
           - type: journald
             container_mode: true
             exclude_units:
-              - nginx.service
-              - homer.service
               - radarr.service
-              - radarr-exportarr.service
               - sonarr.service
-              - sonarr-exportarr.service
               - prowlarr.service
-              - prowlarr-exportarr.service
               - qbittorrent.service
               - jellyfin.service
       nginx:
@@ -89,21 +84,6 @@
       openmetrics:
         init_config:
         instances:
-          - openmetrics_endpoint: http://localhost:{{ containers.sonarr.exportarr.port }}/metrics
-            namespace: sonarr
-            raw_metric_prefix: sonarr_
-            metrics:
-              - .+
-          - openmetrics_endpoint: http://localhost:{{ containers.radarr.exportarr.port }}/metrics
-            namespace: radarr
-            raw_metric_prefix: radarr_
-            metrics:
-              - .+
-          - openmetrics_endpoint: http://localhost:{{ containers.prowlarr.exportarr.port }}/metrics
-            namespace: prowlarr
-            raw_metric_prefix: prowlarr_
-            metrics:
-              - .+
           - openmetrics_endpoint: http://localhost:{{ containers.jellyfin.port }}/jellyfin/metrics
             namespace: jellyfin
             collect_histogram_buckets: true
@@ -112,11 +92,21 @@
             collect_counters_with_distributions: true
             metrics:
               - .+
+      radarr:
+        init_config:
+        instances:
+          - url: http://localhost:{{ containers.radarr.port }}
+            api_key: "{{ secrets.api_keys['radarr'] }}"
       reboot_required:
         init_config:
         instances:
           - reboot_signal_file: /run/reboot-required
             created_at_file: /opt/datadog-agent/reboot-required.created_at
+      sonarr:
+        init_config:
+        instances:
+          - url: http://localhost:{{ containers.sonarr.port }}
+            api_key: "{{ secrets.api_keys['sonarr'] }}"
       systemd:
         init_config:
         instances:
@@ -135,6 +125,8 @@
       - smbus2
       - RPi.bme280
       - git+https://github.com/DataDog/integrations-extras.git@9a8436a623cc1a8af01c10df1047bf8d55572588#subdirectory=reboot_required
+      - git+https://github.com/HadrienPatte/integrations-extras.git@hadrien/sonarr#subdirectory=sonarr
+      - git+https://github.com/HadrienPatte/integrations-extras.git@hadrien/radarr#subdirectory=radarr
     state: present
     executable: /opt/datadog-agent/embedded/bin/pip
   notify: restart datadog-agent
