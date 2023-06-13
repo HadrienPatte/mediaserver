@@ -23,6 +23,13 @@
         enabled: true
       apm_config:
         enabled: false
+    datadog_integration:
+      datadog-reboot_required:
+        action: install
+        version: 1.0.0
+      datadog-sonarr:
+        action: install
+        version: 1.0.0
     datadog_custom_checks:
       custom_atmospheric: custom_atmospheric.py
     datadog_checks:
@@ -124,8 +131,6 @@
     name:
       - smbus2
       - RPi.bme280
-      - git+https://github.com/DataDog/integrations-extras.git@9a8436a623cc1a8af01c10df1047bf8d55572588#subdirectory=reboot_required
-      - git+https://github.com/HadrienPatte/integrations-extras.git@hadrien/sonarr#subdirectory=sonarr
       - git+https://github.com/HadrienPatte/integrations-extras.git@hadrien/radarr#subdirectory=radarr
     state: present
     executable: /opt/datadog-agent/embedded/bin/pip

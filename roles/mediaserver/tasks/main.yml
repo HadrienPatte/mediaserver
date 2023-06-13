@@ -56,6 +56,7 @@
       - docker-compose
       - python3-lxml  # Necessary for the community.general.xml module
       - unzip  # Necessary for the ansible.builtin.unarchive module
+      - acl  # Necessary to become an unprivileged user
     state: present
 
 - name: Configure docker
