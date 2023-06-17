@@ -100,8 +100,9 @@
 - name: Create and configure containers
   ansible.builtin.include_role:
     name: mhutter.docker-systemd-service
+    apply:
+      become: true
   vars:
-    ansible_become: true
     service_name: "{{ item.key }}"
     container_name: "{{ item.key }}"
     container_image: "{{ item.value.container_image }}"

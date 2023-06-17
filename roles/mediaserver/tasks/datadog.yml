@@ -2,8 +2,9 @@
 - name: Install the datadog agent
   ansible.builtin.include_role:
     name: datadog.datadog
+    apply:
+      become: true
   vars:
-    ansible_become: true
     datadog_api_key: "{{ secrets.api_keys['datadog'] }}"
     datadog_additional_groups:
       - adm
