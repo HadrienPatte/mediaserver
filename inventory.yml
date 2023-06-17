@@ -3,4 +3,3 @@ all:
   hosts:
     vanellope:
       ansible_host: vanellope.home
-      ansible_python_interpreter: /usr/bin/python3

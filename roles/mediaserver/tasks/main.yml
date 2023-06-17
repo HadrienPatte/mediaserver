@@ -6,7 +6,6 @@
       | combine({
         'version': item.value.version | default(default.version),
         'container_volumes': item.value.volumes | default([]),
-        'exportarr': item.value.exportarr | default({}),
       })
     }) }}"
   with_dict: "{{ containers }}"
