@@ -15,6 +15,7 @@ ssh_pwauth: false
 
 users:
   - name: hadrien
+    uid: 568
     lock_passwd: true
     ssh_import_id: gh:HadrienPatte
     shell: /bin/bash
