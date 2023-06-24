@@ -28,9 +28,11 @@
       datadog-reboot_required:
         action: install
         version: 1.0.0
+        third_party: true
       datadog-sonarr:
         action: install
         version: 1.0.0
+        third_party: true
     datadog_custom_checks:
       custom_atmospheric: custom_atmospheric.py
     datadog_checks:
