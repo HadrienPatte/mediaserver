@@ -39,6 +39,7 @@ services:
 
       - name: Jellyfin
         type: Emby
+        apikey: {{ secrets.api_keys["jellyfin"] }}
         libraryType: series
         url: http://{{ ansible_host }}/jellyfin
         logo: http://{{ ansible_host }}/jellyfin/web/assets/img/icon-transparent.png
