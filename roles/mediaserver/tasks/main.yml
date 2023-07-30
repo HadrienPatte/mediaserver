@@ -90,8 +90,15 @@
     group: "{{ nonroot_gid }}"
   with_items:
     - /data
+    - /data/downloads
+    - /data/media
+    - /data/media/movies
+    - /data/media/tv
     - /cache
+    - /cache/sonarr
+    - /cache/radarr
     - /etc/jellyfin
+    - /etc/jellyfin/config
 
 - name: Configure jellyfin
   ansible.builtin.include_tasks: jellyfin.yml
