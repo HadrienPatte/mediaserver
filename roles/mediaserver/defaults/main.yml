@@ -41,5 +41,7 @@ containers:
     volumes:
       - /etc/jellyfin:/config
 
+theme: organizr
+
 default:
   version: rolling

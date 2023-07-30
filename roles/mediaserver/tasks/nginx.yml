@@ -39,7 +39,7 @@
 - name: Download theme.park CSS themes
   become: true
   ansible.builtin.unarchive:
-    src: https://github.com/GilbN/theme.park/archive/refs/tags/1.13.6.zip
+    src: https://github.com/GilbN/theme.park/archive/refs/tags/1.13.10.zip
     dest: /var/www/html/theme.park
     remote_src: "yes"
     owner: www-data
