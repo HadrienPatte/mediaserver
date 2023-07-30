@@ -1,0 +1,32 @@
+---
+- name: Install cryptsetup
+  become: true
+  ansible.builtin.apt:
+    name: cryptsetup-bin
+    state: present
+
+- name: Copy volume encryption key
+  become: true
+  ansible.builtin.copy:
+    src: data.key
+    dest: /root/
+    mode: 0400
+
+- name: Add data volume to crypttab
+  become: true
+  community.general.crypttab:
+    name: data_crypt
+    backing_device: UUID={{ disk.uuid }}
+    password: /root/data.key
+    opts: luks
+    state: present
+  notify: Reboot
+
+- name: Add data volume to fstab
+  become: true
+  ansible.posix.mount:
+    src: /dev/mapper/data_crypt
+    path: /data
+    fstype: ext4
+    state: present
+  notify: Reboot

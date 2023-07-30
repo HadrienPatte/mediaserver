@@ -1,6 +1,7 @@
 ---
 - name: Configure mediaserver
   roles:
+    - data-volume
     - mediaserver
   hosts:
     - vanellope
