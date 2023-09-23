@@ -19,7 +19,7 @@ containers:
       - /data:/data
 
   prowlarr:
-    image: ghcr.io/onedr0p/prowlarr-develop
+    image: ghcr.io/onedr0p/prowlarr
     port: 9696
     volumes:
       - /data/prowlarr.db:/config/prowlarr.db
