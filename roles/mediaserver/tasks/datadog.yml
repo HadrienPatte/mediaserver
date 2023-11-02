@@ -46,6 +46,10 @@
         action: install
         version: 1.0.0
         third_party: true
+      datadog-radarr:
+        action: install
+        version: 1.0.0
+        third_party: true
     datadog_custom_checks:
       custom_atmospheric: custom_atmospheric.py
     datadog_checks:
@@ -136,13 +140,12 @@
               - ssh.service
               - unattended-upgrades.service
 
-- name: Install I2C/BME280 dependencies and additionnal integrations in datadog embedded python
+- name: Install I2C/BME280 dependencies in datadog embedded python
   become: true
   ansible.builtin.pip:
     name:
       - smbus2
       - RPi.bme280
-      - git+https://github.com/HadrienPatte/integrations-extras.git@hadrien/radarr#subdirectory=radarr
     state: present
     executable: /opt/datadog-agent/embedded/bin/pip
   notify: restart datadog-agent
