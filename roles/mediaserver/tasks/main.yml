@@ -113,7 +113,7 @@
     container_name: "{{ item.key }}"
     container_image: "{{ item.value.container_image }}"
     container_labels:
-      - com.datadoghq.tags.env=prod
+      - com.datadoghq.tags.env={{ default.env }}
       - com.datadoghq.tags.service={{ item.key }}
       - com.datadoghq.tags.version={{ item.value.version }}
     container_docker_pull: true

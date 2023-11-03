@@ -12,6 +12,7 @@
       - systemd-journal
       - dialout
     datadog_config:
+      env: "{{ default.env }}"
       logs_enabled: true
       listeners:
         - name: docker

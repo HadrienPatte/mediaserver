@@ -46,3 +46,4 @@ theme: organizr
 
 default:
   version: rolling
+  env: prod
