@@ -38,6 +38,10 @@
         enabled: true
       apm_config:
         enabled: false
+    service_monitoring_config:
+      enabled: true
+    network_config:
+      enable_https_monitoring: false
     datadog_integration:
       datadog-reboot_required:
         action: install
