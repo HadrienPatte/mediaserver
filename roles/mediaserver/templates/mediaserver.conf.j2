@@ -20,7 +20,7 @@ server {
   }
 
   location /css {
-    root /var/www/html/theme.park/theme.park-1.13.6;
+    root /var/www/html/theme.park/theme.park-{{ themepark.version }};
   }
 
 {% for name in containers %}
@@ -45,7 +45,7 @@ server {
     '</head>'
     '
     <link rel="stylesheet" type="text/css" href="/css/base/{{ name }}/{{ name }}-base.css">
-    <link rel="stylesheet" type="text/css" href="/css/theme-options/{{ theme }}.css">
+    <link rel="stylesheet" type="text/css" href="/css/theme-options/{{ themepark.theme }}.css">
 </head>';
     sub_filter_once on;
   }

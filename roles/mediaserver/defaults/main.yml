@@ -42,7 +42,9 @@ containers:
       - /etc/jellyfin:/config
       - /data/media:/data/media
 
-theme: organizr
+themepark:
+  theme: organizr
+  version: 1.14.1
 
 default:
   version: rolling
