@@ -15,13 +15,14 @@
     group: www-data
   with_items:
     - /var/www/html
+    - /var/www/html/datadog
     - /var/www/html/homer
     - /var/www/html/theme.park
 
 - name: Install homer assets
   become: true
   ansible.builtin.unarchive:
-    src: https://github.com/bastienwirtz/homer/releases/download/v23.02.2/homer.zip
+    src: https://github.com/bastienwirtz/homer/releases/download/v{{ homer.version }}/homer.zip
     dest: /var/www/html/homer
     remote_src: "yes"
     owner: www-data
@@ -42,6 +43,15 @@
     src: https://github.com/themepark-dev/theme.park/archive/refs/tags/{{ themepark.version }}.zip
     dest: /var/www/html/theme.park
     remote_src: "yes"
+    owner: www-data
+    group: www-data
+
+- name: Download datadog RUM script
+  become: true
+  ansible.builtin.get_url:
+    url: https://www.datadoghq-browser-agent.com/us1/v5/datadog-rum.js
+    dest: /var/www/html/datadog/rum.js
+    mode: 0600
     owner: www-data
     group: www-data
 

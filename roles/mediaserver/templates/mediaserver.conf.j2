@@ -4,6 +4,8 @@ server {
 
   server_name {{ ansible_host }};
 
+  sub_filter_once on;
+
   location /nginx-status {
     # only allow local connections from the datadog-agent (agent uses IPv6)
     allow ::1;
@@ -17,11 +19,37 @@ server {
 
   location / {
     root /var/www/html/homer;
+
+    sub_filter
+      '<head>'
+      '<head>
+      <script src="/datadog/rum.js" type="text/javascript"></script>
+      <script>
+        window.DD_RUM && window.DD_RUM.init({
+          applicationId: "{{ secrets.rum.application_id }}",
+          clientToken: "{{ secrets.rum.client_token }}",
+          site: "datadoghq.com",
+          service: "homer",
+          env: "{{ default.env }}",
+          version: "{{ homer.version }}",
+          sessionSampleRate: 100,
+          sessionReplaySampleRate: 100,
+          trackResources: true,
+          trackLongTasks: true,
+          trackUserInteractions: true,
+          defaultPrivacyLevel: "mask-user-input",
+        });
+       </script>';
   }
 
   location /css {
-    root /var/www/html/theme.park/theme.park-{{ themepark.version }};
+    alias /var/www/html/theme.park/theme.park-{{ themepark.version }};
   }
+
+  location /datadog {
+    alias /var/www/html/datadog;
+  }
+
 
 {% for name in containers %}
 {% set container = containers[name] %}
@@ -41,13 +69,34 @@ server {
     proxy_set_header X-Forwarded-Protocol $scheme;
 
     proxy_set_header Accept-Encoding "";
+
     sub_filter
     '</head>'
     '
     <link rel="stylesheet" type="text/css" href="/css/base/{{ name }}/{{ name }}-base.css">
     <link rel="stylesheet" type="text/css" href="/css/theme-options/{{ themepark.theme }}.css">
 </head>';
-    sub_filter_once on;
+
+    sub_filter
+      '<head>'
+      '<head>
+      <script src="/datadog/rum.js" type="text/javascript"></script>
+      <script>
+        window.DD_RUM && window.DD_RUM.init({
+          applicationId: "{{ secrets.rum.application_id }}",
+          clientToken: "{{ secrets.rum.client_token }}",
+          site: "datadoghq.com",
+          service: "{{ name }}",
+          env: "{{ default.env }}",
+          version: "{{ container.version }}",
+          sessionSampleRate: 100,
+          sessionReplaySampleRate: 100,
+          trackResources: true,
+          trackLongTasks: true,
+          trackUserInteractions: true,
+          defaultPrivacyLevel: "mask-user-input",
+        });
+       </script>';
   }
 {% endfor %}
 }

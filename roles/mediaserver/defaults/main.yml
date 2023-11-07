@@ -42,6 +42,9 @@ containers:
       - /etc/jellyfin:/config
       - /data/media:/data/media
 
+homer:
+  version: 23.10.1
+
 themepark:
   theme: organizr
   version: 1.14.1
