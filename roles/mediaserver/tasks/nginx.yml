@@ -17,7 +17,6 @@
     - /var/www/html
     - /var/www/html/datadog
     - /var/www/html/homer
-    - /var/www/html/theme.park
 
 - name: Install homer assets
   become: true
@@ -41,7 +40,9 @@
   become: true
   ansible.builtin.unarchive:
     src: https://github.com/themepark-dev/theme.park/archive/refs/tags/{{ themepark.version }}.zip
-    dest: /var/www/html/theme.park
+    dest: /var/www/html
+    include:
+      - "*.css"
     remote_src: "yes"
     owner: www-data
     group: www-data

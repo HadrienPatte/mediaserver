@@ -43,7 +43,7 @@ server {
   }
 
   location /css {
-    alias /var/www/html/theme.park/theme.park-{{ themepark.version }};
+    alias /var/www/html/theme.park-{{ themepark.version }}/css;
   }
 
   location /datadog {
