@@ -1,3 +1,5 @@
+datadog_environment {{ default.env }};
+
 server {
   listen 80;
   listen [::]:80;
@@ -5,6 +7,8 @@ server {
   server_name {{ ansible_host }};
 
   sub_filter_once on;
+
+  datadog_sample_rate 1.0;
 
   location /nginx-status {
     # only allow local connections from the datadog-agent (agent uses IPv6)
@@ -38,6 +42,7 @@ server {
           trackLongTasks: true,
           trackUserInteractions: true,
           defaultPrivacyLevel: "mask-user-input",
+          allowedTracingUrls: ["http://{{ ansible_host }}"],
         });
        </script>';
   }
@@ -95,6 +100,7 @@ server {
           trackLongTasks: true,
           trackUserInteractions: true,
           defaultPrivacyLevel: "mask-user-input",
+          allowedTracingUrls: ["http://{{ ansible_host }}"],
         });
        </script>';
   }

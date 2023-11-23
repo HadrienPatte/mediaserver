@@ -37,7 +37,7 @@
       process_config:
         enabled: true
       apm_config:
-        enabled: false
+        enabled: true
     service_monitoring_config:
       enabled: true
     network_config:

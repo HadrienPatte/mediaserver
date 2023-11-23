@@ -5,6 +5,35 @@
     name:
       - nginx
 
+- name: Gather package facts
+  ansible.builtin.package_facts:
+
+- name: Download datadog nginx tracing module
+  become: true
+  ansible.builtin.unarchive:
+    src: "https://github.com/DataDog/nginx-datadog/releases/download/v1.0.4/nginx_{{ ansible_facts.packages.nginx[0].version | split('-') | first }}-arm64-ngx_http_datadog_module.so.tgz"
+    dest: /usr/lib/nginx/modules
+    remote_src: "yes"
+    owner: root
+    group: root
+  notify: Restart nginx
+
+- name: Copy datadog nginx tracing module config
+  become: true
+  ansible.builtin.copy:
+    src: mod-http-datadog.conf
+    dest: /usr/share/nginx/modules-available/
+    mode: 0644
+  notify: Restart nginx
+
+- name: Enable datadog nginx tracing module
+  become: true
+  ansible.builtin.file:
+    src: /usr/share/nginx/modules-available/mod-http-datadog.conf
+    dest: /etc/nginx/modules-enabled/10-mod-http-datadog.conf
+    state: link
+  notify: Restart nginx
+
 - name: Create static assets directories
   become: true
   ansible.builtin.file:
