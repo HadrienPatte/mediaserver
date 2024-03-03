@@ -38,6 +38,15 @@
         enabled: true
       apm_config:
         enabled: true
+      sbom:
+        enabled: true
+        container_image:
+          enabled: true
+        host:
+          enabled: true
+      container_image:
+        enabled: true
+
     service_monitoring_config:
       enabled: true
     network_config:
