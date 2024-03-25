@@ -1,0 +1,48 @@
+---
+- name: Create config directory for {{ item.key }}
+  become: true
+  ansible.builtin.file:
+    path: /data/state/{{ item.key }}
+    state: directory
+    mode: 0755
+    owner: "{{ nonroot_uid }}"
+    group: "{{ nonroot_gid }}"
+
+- name: Check if config file exists for {{ item.key }}
+  ansible.builtin.stat:
+    path: /data/state/{{ item.key }}/config.xml
+  register: config_file
+
+- name: Create config file for {{ item.key }}
+  ansible.builtin.copy:
+    dest: /data/state/{{ item.key }}/config.xml
+    content: "<Config/>"
+    mode: 0600
+  when: not config_file.stat.exists
+  notify: Restart {{ item.key }}
+
+- name: Configure {{ item.key }}
+  community.general.xml:
+    path: /data/state/{{ item.key }}/config.xml
+    xpath: /Config/{{ param.key }}
+    value: "{{ param.value }}"
+  loop:
+    - key: LogLevel
+      value: debug
+    - key: Port
+      value: "{{ item.value.port }}"
+    - key: UrlBase
+      value: "{{ item.key }}"
+    - key: ApiKey
+      value: "{{ secrets.api_keys[item.key] }}"
+    - key: AnalyticsEnabled
+      value: "false"
+    - key: AuthenticationMethod
+      value: External
+    - key: AuthenticationRequired
+      value: DisabledForLocalAddresses
+    - key: LaunchBrowser
+      value: "false"
+  loop_control:
+    loop_var: param
+  notify: Restart {{ item.key }}

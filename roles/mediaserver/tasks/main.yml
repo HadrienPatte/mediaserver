@@ -6,6 +6,7 @@
       | combine({
         'version': item.value.version | default(default.version),
         'container_volumes': item.value.volumes | default([]),
+        'container_env': item.value.env | default({}),
       })
     }) }}"
   with_dict: "{{ containers }}"
@@ -18,12 +19,6 @@
       | combine({
         'container_image': item.value.image + ':' + item.value.version,
         'container_port': '127.0.0.1:' + item.value.port | string + ':' + item.value.port | string,
-        'container_env': item.value.env | default({}) | combine({
-          item.key | upper + '__API_KEY': secrets.api_keys[item.key],
-          item.key | upper + '__LOG_LEVEL': 'debug',
-          item.key | upper + '__URL_BASE': item.key,
-          item.key | upper + '__ANALYTICS_ENABLED': 'False',
-        } if 'arr' in item.key else {}),
       })
     }) }}"
   with_dict: "{{ containers }}"
@@ -102,6 +97,13 @@
 
 - name: Configure jellyfin
   ansible.builtin.include_tasks: jellyfin.yml
+
+- name: Configure arr services
+  ansible.builtin.include_tasks: arr.yml
+  with_dict: "{{ containers }}"
+  loop_control:
+    label: "{{ item.key }}"
+  when: item.key.endswith("arr")
 
 - name: Create and configure containers
   ansible.builtin.include_role:
