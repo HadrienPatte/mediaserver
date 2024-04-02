@@ -1,7 +1,7 @@
 ---
 containers:
   radarr:
-    image: ghcr.io/onedr0p/radarr
+    image: ghcr.io/hadrienpatte/radarr
     port: 7878
     volumes:
       - /data/state/radarr/config.xml:/config/config.xml
@@ -11,7 +11,7 @@ containers:
       - /data:/data
 
   sonarr:
-    image: ghcr.io/onedr0p/sonarr
+    image: ghcr.io/hadrienpatte/sonarr
     port: 8989
     volumes:
       - /data/state/sonarr/config.xml:/config/config.xml
@@ -21,7 +21,7 @@ containers:
       - /data:/data
 
   prowlarr:
-    image: ghcr.io/onedr0p/prowlarr
+    image: ghcr.io/hadrienpatte/prowlarr
     port: 9696
     volumes:
       - /data/state/prowlarr/config.xml:/config/config.xml
@@ -30,6 +30,7 @@ containers:
 
   qbittorrent:
     image: ghcr.io/onedr0p/qbittorrent
+    version: rolling
     port: 8585
     env:
       QBITTORRENT__PORT: "8585"
@@ -40,6 +41,7 @@ containers:
 
   jellyfin:
     image: ghcr.io/onedr0p/jellyfin
+    version: rolling
     port: 8096
     volumes:
       - /etc/jellyfin:/config
@@ -53,5 +55,5 @@ themepark:
   version: 1.14.1
 
 default:
-  version: rolling
+  version: latest
   env: prod
