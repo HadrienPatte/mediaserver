@@ -1,12 +1,17 @@
 ---
-- name: Create config directory for {{ item.key }}
+- name: Create config directories for {{ item.key }}
   become: true
   ansible.builtin.file:
-    path: /data/state/{{ item.key }}
+    path: "{{ directory }}"
     state: directory
     mode: 0755
     owner: "{{ nonroot_uid }}"
     group: "{{ nonroot_gid }}"
+  with_items:
+    - /data/state/{{ item.key }}
+    - /data/state/{{ item.key }}/MediaCover
+  loop_control:
+    loop_var: directory
 
 - name: Check if config file exists for {{ item.key }}
   ansible.builtin.stat:

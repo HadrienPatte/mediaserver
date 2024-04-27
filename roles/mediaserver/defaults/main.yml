@@ -5,9 +5,9 @@ containers:
     port: 7878
     volumes:
       - /data/state/radarr/config.xml:/config/config.xml
-      - /data/radarr.db:/config/radarr.db
-      - /data/radarr.db-wal:/config/radarr.db-wal
-      - /cache/radarr:/config/MediaCover
+      - /data/state/radarr/radarr.db:/config/radarr.db
+      - /data/state/radarr/radarr.db-wal:/config/radarr.db-wal
+      - /data/state/radarr/MediaCover:/config/MediaCover
       - /data:/data
 
   sonarr:
@@ -15,9 +15,9 @@ containers:
     port: 8989
     volumes:
       - /data/state/sonarr/config.xml:/config/config.xml
-      - /data/sonarr.db:/config/sonarr.db
-      - /data/sonarr.db-wal:/config/sonarr.db-wal
-      - /cache/sonarr:/config/MediaCover
+      - /data/state/sonarr/sonarr.db:/config/sonarr.db
+      - /data/state/sonarr/sonarr.db-wal:/config/sonarr.db-wal
+      - /data/state/sonarr/MediaCover:/config/MediaCover
       - /data:/data
 
   prowlarr:
@@ -25,8 +25,8 @@ containers:
     port: 9696
     volumes:
       - /data/state/prowlarr/config.xml:/config/config.xml
-      - /data/prowlarr.db:/config/prowlarr.db
-      - /data/prowlarr.db-wal:/config/prowlarr.db-wal
+      - /data/state/prowlarr/prowlarr.db:/config/prowlarr.db
+      - /data/state/prowlarr/prowlarr.db-wal:/config/prowlarr.db-wal
 
   qbittorrent:
     image: ghcr.io/onedr0p/qbittorrent

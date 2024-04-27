@@ -75,7 +75,7 @@
     driver: bridge
     state: present
 
-- name: Create data and cache directories
+- name: Create data directories
   become: true
   ansible.builtin.file:
     path: "{{ item }}"
@@ -89,9 +89,6 @@
     - /data/media
     - /data/media/movies
     - /data/media/tv
-    - /cache
-    - /cache/sonarr
-    - /cache/radarr
     - /etc/jellyfin
     - /etc/jellyfin/config
 
