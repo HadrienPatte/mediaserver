@@ -1,0 +1,32 @@
+---
+- name: Configure qbittorrent
+  community.general.ini_file:
+    path: /data/state/qbittorrent/qBittorrent.conf
+    section: "{{ item.section }}"
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+    no_extra_spaces: true
+    mode: 0600
+  with_items:
+    - section: BitTorrent
+      option: Session\DefaultSavePath
+      value: /media/downloads
+    - section: BitTorrent
+      option: Session\TempPath
+      value: /media/downloads/temp
+    - section: BitTorrent
+      option: Session\GlobalMaxSeedingMinutes
+      value: "1"
+    - section: Preferences
+      option: WebUI\Port
+      value: "{{ containers['qbittorrent'].port }}"
+    - section: Preferences
+      option: WebUI\AuthSubnetWhitelistEnabled
+      value: "true"
+    - section: Preferences
+      option: WebUI\AuthSubnetWhitelist
+      value: "192.168.0.0/16,{{ network['network']['IPAM']['Config'][0]['Subnet'] }}"
+    - section: LegalNotice
+      option: Accepted
+      value: "true"
+  notify: Restart qbittorrent

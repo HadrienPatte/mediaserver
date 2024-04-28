@@ -29,15 +29,11 @@ containers:
       - /data/state/prowlarr/prowlarr.db-wal:/config/prowlarr.db-wal
 
   qbittorrent:
-    image: ghcr.io/onedr0p/qbittorrent
-    version: rolling
+    image: ghcr.io/hadrienpatte/qbittorrent
     port: 8585
-    env:
-      QBITTORRENT__PORT: "8585"
-      QBT_BitTorrent__Session__DefaultSavePath: /data/downloads
-      QBT_BitTorrent__Session__GlobalMaxSeedingMinutes: "1"
     volumes:
-      - /data/downloads:/data/downloads
+      - /data/state/qbittorrent/qBittorrent.conf:/config/qBittorrent/config/qBittorrent.conf
+      - /data/media/downloads:/media/downloads
 
   jellyfin:
     image: ghcr.io/onedr0p/jellyfin

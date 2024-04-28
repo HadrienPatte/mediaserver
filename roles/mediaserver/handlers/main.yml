@@ -29,6 +29,12 @@
     name: prowlarr
     state: restarted
 
+- name: Restart qbittorrent
+  become: true
+  ansible.builtin.systemd:
+    name: qbittorrent
+    state: restarted
+
 - name: Restart jellyfin
   become: true
   ansible.builtin.systemd:

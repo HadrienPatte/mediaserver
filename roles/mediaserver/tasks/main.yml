@@ -74,6 +74,7 @@
     name: mediaserver
     driver: bridge
     state: present
+  register: network
 
 - name: Create data directories
   become: true
@@ -85,12 +86,16 @@
     group: "{{ nonroot_gid }}"
   with_items:
     - /data
-    - /data/downloads
     - /data/media
+    - /data/media/downloads
     - /data/media/movies
     - /data/media/tv
+    - /data/state/qbittorrent
     - /etc/jellyfin
     - /etc/jellyfin/config
+
+- name: Configure qbittorrent
+  ansible.builtin.include_tasks: qbittorrent.yml
 
 - name: Configure jellyfin
   ansible.builtin.include_tasks: jellyfin.yml
