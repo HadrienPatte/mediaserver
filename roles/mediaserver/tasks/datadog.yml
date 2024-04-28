@@ -1,7 +1,7 @@
 ---
 - name: Install the datadog agent
   ansible.builtin.include_role:
-    name: Datadog.datadog
+    name: datadog.dd.agent
     apply:
       become: true
   vars:

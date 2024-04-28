@@ -18,4 +18,5 @@ ansible:
 	ansible-playbook -i inventory.yml playbook.yml
 
 ansible-deps:
-	ansible-galaxy role install -r roles/requirements.yml
+	ansible-galaxy role install -r roles/requirements.yml --force
+	ansible-galaxy collection install -r roles/requirements.yml

@@ -1,6 +1,7 @@
 ---
+collections:
+  - name: datadog.dd
+    version: 5.2.0
 roles:
-  - name: Datadog.datadog
-    version: 4.20.1
   - name: mhutter.docker-systemd-service
     version: v2.10.0
