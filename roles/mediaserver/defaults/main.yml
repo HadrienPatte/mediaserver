@@ -44,7 +44,7 @@ containers:
       - /data/media:/data/media
 
 homer:
-  version: 23.10.1
+  version: 24.04.1
 
 themepark:
   theme: organizr
