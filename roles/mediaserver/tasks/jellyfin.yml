@@ -38,3 +38,10 @@
     xpath: /NetworkConfiguration/BaseUrl
     value: "/jellyfin"
   notify: Restart jellyfin
+
+- name: Configure jellyfin logging
+  ansible.builtin.copy:
+    src: jellyfin.logging.json
+    dest: /data/state/jellyfin/config/logging.default.json
+    mode: 0600
+  notify: Restart jellyfin
