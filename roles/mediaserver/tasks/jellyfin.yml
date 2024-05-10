@@ -1,12 +1,12 @@
 ---
 - name: Check if jellyfin system config file exists
   ansible.builtin.stat:
-    path: /etc/jellyfin/config/system.xml
+    path: /data/state/jellyfin/config/system.xml
   register: jellyfin_system_config_file
 
 - name: Create jellyfin system config file
   ansible.builtin.copy:
-    dest: /etc/jellyfin/config/system.xml
+    dest: /data/state/jellyfin/config/system.xml
     content: "<ServerConfiguration/>"
     mode: 0600
   when: not jellyfin_system_config_file.stat.exists
@@ -14,19 +14,19 @@
 
 - name: Enable jellyfin metrics
   community.general.xml:
-    path: /etc/jellyfin/config/system.xml
+    path: /data/state/jellyfin/config/system.xml
     xpath: /ServerConfiguration/EnableMetrics
     value: "true"
   notify: Restart jellyfin
 
 - name: Check if jellyfin network config file exists
   ansible.builtin.stat:
-    path: /etc/jellyfin/config/network.xml
+    path: /data/state/jellyfin/config/network.xml
   register: jellyfin_network_config_file
 
 - name: Create jellyfin network config file
   ansible.builtin.copy:
-    dest: /etc/jellyfin/config/network.xml
+    dest: /data/state/jellyfin/config/network.xml
     content: "<NetworkConfiguration/>"
     mode: 0600
   when: not jellyfin_network_config_file.stat.exists
@@ -34,7 +34,7 @@
 
 - name: Enable jellyfin metrics
   community.general.xml:
-    path: /etc/jellyfin/config/network.xml
+    path: /data/state/jellyfin/config/network.xml
     xpath: /NetworkConfiguration/BaseUrl
     value: "/jellyfin"
   notify: Restart jellyfin

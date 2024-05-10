@@ -8,7 +8,7 @@ containers:
       - /data/state/radarr/radarr.db:/config/radarr.db
       - /data/state/radarr/radarr.db-wal:/config/radarr.db-wal
       - /data/state/radarr/MediaCover:/config/MediaCover
-      - /data:/data
+      - /data/media:/media
 
   sonarr:
     image: ghcr.io/hadrienpatte/sonarr
@@ -18,7 +18,7 @@ containers:
       - /data/state/sonarr/sonarr.db:/config/sonarr.db
       - /data/state/sonarr/sonarr.db-wal:/config/sonarr.db-wal
       - /data/state/sonarr/MediaCover:/config/MediaCover
-      - /data:/data
+      - /data/media:/media
 
   prowlarr:
     image: ghcr.io/hadrienpatte/prowlarr
@@ -40,8 +40,8 @@ containers:
     version: rolling
     port: 8096
     volumes:
-      - /etc/jellyfin:/config
-      - /data/media:/data/media
+      - /data/state/jellyfin:/config
+      - /data/media/libraries:/media/libraries
 
 homer:
   version: 24.04.1

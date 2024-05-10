@@ -88,11 +88,12 @@
     - /data
     - /data/media
     - /data/media/downloads
-    - /data/media/movies
-    - /data/media/tv
+    - /data/media/libraries
+    - /data/media/libraries/movies
+    - /data/media/libraries/shows
     - /data/state/qbittorrent
-    - /etc/jellyfin
-    - /etc/jellyfin/config
+    - /data/state/jellyfin
+    - /data/state/jellyfin/config
 
 - name: Configure qbittorrent
   ansible.builtin.include_tasks: qbittorrent.yml
