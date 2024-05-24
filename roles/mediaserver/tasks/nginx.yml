@@ -8,10 +8,17 @@
 - name: Gather package facts
   ansible.builtin.package_facts:
 
+- name: Create nginx modules directory
+  become: true
+  ansible.builtin.file:
+    path: /usr/lib/nginx/modules
+    state: directory
+    mode: 0755
+
 - name: Download datadog nginx tracing module
   become: true
   ansible.builtin.unarchive:
-    src: "https://github.com/DataDog/nginx-datadog/releases/download/v1.0.4/nginx_{{ ansible_facts.packages.nginx[0].version | split('-') | first }}-arm64-ngx_http_datadog_module.so.tgz"
+    src: "https://github.com/DataDog/nginx-datadog/releases/download/v{{ nginx_datadog.version }}/nginx_{{ ansible_facts.packages.nginx[0].version | split('-') | first }}-arm64-ngx_http_datadog_module.so.tgz"
     dest: /usr/lib/nginx/modules
     remote_src: "yes"
     owner: root

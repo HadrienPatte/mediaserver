@@ -162,4 +162,4 @@
       - RPi.bme280
     state: present
     executable: /opt/datadog-agent/embedded/bin/pip
-  notify: restart datadog-agent
+  notify: restart datadog-agent  # noqa name[casing]
