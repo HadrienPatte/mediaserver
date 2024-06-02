@@ -1,7 +1,6 @@
 ---
 containers:
   radarr:
-    image: ghcr.io/hadrienpatte/radarr
     port: 7878
     volumes:
       - /data/state/radarr/config.xml:/config/config.xml
@@ -11,7 +10,6 @@ containers:
       - /data/media:/media
 
   sonarr:
-    image: ghcr.io/hadrienpatte/sonarr
     port: 8989
     volumes:
       - /data/state/sonarr/config.xml:/config/config.xml
@@ -21,7 +19,6 @@ containers:
       - /data/media:/media
 
   prowlarr:
-    image: ghcr.io/hadrienpatte/prowlarr
     port: 9696
     volumes:
       - /data/state/prowlarr/config.xml:/config/config.xml
@@ -29,15 +26,12 @@ containers:
       - /data/state/prowlarr/prowlarr.db-wal:/config/prowlarr.db-wal
 
   qbittorrent:
-    image: ghcr.io/hadrienpatte/qbittorrent
     port: 8585
     volumes:
       - /data/state/qbittorrent/qBittorrent.conf:/config/qBittorrent/config/qBittorrent.conf
       - /data/media/downloads:/media/downloads
 
   jellyfin:
-    image: ghcr.io/onedr0p/jellyfin
-    version: rolling
     port: 8096
     volumes:
       - /data/state/jellyfin:/config
@@ -54,5 +48,6 @@ nginx_datadog:
   version: 1.1.0
 
 default:
+  oci_registry: ghcr.io/hadrienpatte
   version: latest
   env: prod

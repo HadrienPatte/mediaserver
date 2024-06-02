@@ -4,6 +4,7 @@
     containers: "{{ containers | default({}) | combine({
       item.key: item.value
       | combine({
+        'image': default.oci_registry + '/' + item.key,
         'version': item.value.version | default(default.version),
         'container_volumes': item.value.volumes | default([]),
         'container_env': item.value.env | default({}),
