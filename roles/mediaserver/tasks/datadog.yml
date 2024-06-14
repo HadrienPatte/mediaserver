@@ -89,7 +89,7 @@
         instances:
           - use_mount: true
             all_partitions: true
-            excluded_filesystems:
+            file_system_exclude:
               - overlay
               - nsfs
       custom_atmospheric:
