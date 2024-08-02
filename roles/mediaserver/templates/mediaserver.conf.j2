@@ -1,4 +1,6 @@
 datadog_environment {{ default.env }};
+datadog_appsec_enabled on;
+datadog_waf_thread_pool_name waf_thread_pool;
 
 server {
   listen 80;

@@ -18,7 +18,7 @@
 - name: Download datadog nginx tracing module
   become: true
   ansible.builtin.unarchive:
-    src: "https://github.com/DataDog/nginx-datadog/releases/download/v{{ nginx_datadog.version }}/nginx_{{ ansible_facts.packages.nginx[0].version | split('-') | first }}-arm64-ngx_http_datadog_module.so.tgz"
+    src: "https://github.com/DataDog/nginx-datadog/releases/download/v{{ nginx_datadog.version }}/ngx_http_datadog_module-appsec-arm64-{{ ansible_facts.packages.nginx[0].version | split('-') | first }}.so.tgz"
     dest: /usr/lib/nginx/modules
     remote_src: "yes"
     owner: root
