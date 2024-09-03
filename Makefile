@@ -8,7 +8,7 @@ umount:
 	@sudo rmdir /media/${USER}/system-boot /media/${USER}/writable
 
 flash:
-	@sudo dd if=bootstrap/ubuntu-24.04-preinstalled-server-arm64+raspi.img of=/dev/sdc bs=4M conv=fsync status=progress
+	@sudo dd if=bootstrap/ubuntu-24.04.1-preinstalled-server-arm64+raspi.img of=/dev/sdc bs=4M conv=fsync status=progress
 	@notify-send "Flash complete"
 
 configure: mount
