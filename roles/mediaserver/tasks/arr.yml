@@ -32,8 +32,10 @@
     xpath: /Config/{{ param.key }}
     value: "{{ param.value }}"
   loop:
-    - key: LogLevel
-      value: debug
+    - key: ConsoleLogLevel
+      value: Debug
+    - key: LogDbEnabled
+      value: "false"
     - key: Port
       value: "{{ item.value.port }}"
     - key: UrlBase
