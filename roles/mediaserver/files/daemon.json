@@ -4,5 +4,11 @@
     "max-size": "2m",
     "max-file": "1",
     "compress": "false"
+  },
+  "default-runtime": "dd-shim",
+  "runtimes": {
+    "dd-shim": {
+      "path": "/opt/datadog-packages/datadog-apm-inject/stable/inject/auto_inject_runc"
+    }
   }
 }
