@@ -1,0 +1,42 @@
+---
+- name: Add docker repository
+  become: true
+  ansible.builtin.deb822_repository:
+    name: docker
+    architectures:
+      - arm64
+    uris: "https://download.docker.com/linux/ubuntu"
+    signed_by: "https://download.docker.com/linux/ubuntu/gpg"
+    suites:
+      - "{{ ansible_distribution_release }}"
+    components:
+      - stable
+    state: present
+    enabled: true
+
+- name: Install docker
+  become: true
+  ansible.builtin.apt:
+    name:
+      - docker-ce
+      - docker-compose
+
+- name: Configure docker
+  become: true
+  ansible.builtin.copy:
+    src: daemon.json
+    dest: /etc/docker/
+    mode: 0600
+  notify:
+    - Restart docker
+
+- name: Configure docker autoclean
+  ansible.builtin.include_role:
+    name: HadrienPatte.systemd-timers
+    apply:
+      become: true
+  vars:
+    timers:
+      docker-system-prune:
+        timer_command: /usr/bin/docker system prune --all --volumes --force
+        timer_OnCalendar: hourly

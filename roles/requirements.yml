@@ -5,3 +5,4 @@ collections:
 roles:
   - name: mhutter.docker-systemd-service
     version: v2.10.0
+  - name: HadrienPatte.systemd-timers
