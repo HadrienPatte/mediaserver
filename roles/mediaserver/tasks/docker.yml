@@ -13,6 +13,13 @@
       - stable
     state: present
     enabled: true
+  register: docker_repository
+
+- name: Refresh APT cache  # noqa no-handler
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+  when: docker_repository.changed
 
 - name: Install docker
   become: true
