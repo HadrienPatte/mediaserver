@@ -41,6 +41,24 @@
     state: link
   notify: Restart nginx
 
+- name: Configure nginx JSON log format
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/nginx/nginx.conf
+    insertbefore: "access_log"
+    regexp: "log_format datadog_json"
+    line: |
+      log_format datadog_json escape=json '{"remote_addr": "$remote_addr", "forwarded_user": "$http_x_forwarded_user", "time_local": "$time_local", "request": "$request", "status": $status, "body_bytes_sent": $body_bytes_sent, "referer": "$http_referer", "user_agent": "$http_user_agent", "forwarded_for": "$http_x_forwarded_for", "dd.trace_id": "$datadog_trace_id", "dd.span_id": "$datadog_span_id"}';
+  notify: Restart nginx
+
+- name: Configure nginx to emit JSON logs
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/nginx/nginx.conf
+    regexp: "access_log"
+    line: "access_log /var/log/nginx/access.log datadog_json;"
+  notify: Restart nginx
+
 - name: Create static assets directories
   become: true
   ansible.builtin.file:
