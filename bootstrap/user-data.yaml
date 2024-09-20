@@ -42,12 +42,12 @@ write_files:
       # use the syslog group by default, since this is the owning group of /var/log.
       su root syslog
 
-      # purge logs everyday
+      # purge logs on every logrotate run
       rotate 0
-      daily
+      size 1
 
-      # create new (empty) log files after rotating old ones
-      create
+      # keep existing file and truncate it to avoid leaks caused by open file handles on deleted files
+      copytruncate
 
       /var/log/* {
         postrotate
