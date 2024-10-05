@@ -100,24 +100,4 @@
   when: item.key.endswith("arr")
 
 - name: Create and configure containers
-  ansible.builtin.include_role:
-    name: mhutter.docker-systemd-service
-    apply:
-      become: true
-  vars:
-    service_name: "{{ item.key }}"
-    container_name: "{{ item.key }}"
-    container_image: "{{ item.value.container_image }}"
-    container_labels:
-      - com.datadoghq.tags.env={{ default.env }}
-      - com.datadoghq.tags.service={{ item.key }}
-      - com.datadoghq.tags.version={{ item.value.version }}
-    container_docker_pull: true
-    container_ports:
-      - "{{ item.value.container_port }}"
-    container_network: "mediaserver"
-    container_env: "{{ item.value.container_env }}"
-    container_volumes: "{{ item.value.container_volumes }}"
-  with_dict: "{{ containers }}"
-  loop_control:
-    label: "{{ item.key }}"
+  ansible.builtin.include_tasks: containers.yml

@@ -1,0 +1,18 @@
+[Unit]
+After=docker.service
+PartOf=docker.service
+Requires=docker.service
+
+[Service]
+ExecStartPre=-/usr/bin/docker rm -f {{ container.name }}
+ExecStartPre=-/usr/bin/docker pull {{ container.image }}:{{ container.version }}
+ExecStart=/bin/sh -c "/usr/bin/docker run --name {{ container.name }} --rm --init --pull always --security-opt=no-new-privileges{% for volume in container.container_volumes %} --volume {{ volume }}{% endfor %} --publish {{ container.container_port }} --network mediaserver --label com.datadoghq.tags.env={{ default.env }} --label com.datadoghq.tags.service={{ container.name }} --label com.datadoghq.tags.version=$(/usr/bin/docker inspect {{ container.image }}:{{ container.version }} -f '{% raw %}{{ with index .Config.Labels \"org.opencontainers.image.version\" }}{{ . }}{{ else }}{% endraw %}{{ container.version }}{% raw %}{{ end }}{% endraw %}') {{ container.image }}:$(/usr/bin/docker inspect {{ container.image }}:{{ container.version }} -f '{% raw %}{{ with index .Config.Labels \"org.opencontainers.image.version\" }}{{ . }}{{ else }}{% endraw %}{{ container.version }}{% raw %}{{ end }}{% endraw %}')"
+ExecStop=/usr/bin/docker stop {{ container.name }}
+TimeoutStartSec=300
+
+SyslogIdentifier={{ container.name }}
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=docker.service
