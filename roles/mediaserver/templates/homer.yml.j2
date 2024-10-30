@@ -18,36 +18,36 @@ services:
         type: Emby
         apikey: {{ secrets.api_keys["jellyfin"] }}
         libraryType: series
-        url: http://{{ ansible_host }}/jellyfin
-        logo: http://{{ ansible_host }}/jellyfin/web/assets/img/icon-transparent.png
+        url: /jellyfin
+        logo: /jellyfin/web/assets/img/icon-transparent.png
 
       - name: Sonarr
         type: Sonarr
         apikey: {{ secrets.api_keys["sonarr"] }}
-        url: http://{{ ansible_host }}/sonarr
-        logo: http://{{ ansible_host }}/sonarr/Content/Images/logo.svg
+        url: /sonarr
+        logo: /sonarr/Content/Images/logo.svg
 
       - name: Prowlarr
         type: Prowlarr
         apikey: {{ secrets.api_keys["prowlarr"] }}
-        url: http://{{ ansible_host }}/prowlarr
-        logo: http://{{ ansible_host }}/prowlarr/Content/Images/logo.svg
+        url: /prowlarr
+        logo: /prowlarr/Content/Images/logo.svg
 
       - name: Jellyfin
         type: Emby
         apikey: {{ secrets.api_keys["jellyfin"] }}
         libraryType: movies
-        url: http://{{ ansible_host }}/jellyfin
-        logo: http://{{ ansible_host }}/jellyfin/web/assets/img/icon-transparent.png
+        url: /jellyfin
+        logo: /jellyfin/web/assets/img/icon-transparent.png
 
       - name: Radarr
         type: Radarr
         apikey: {{ secrets.api_keys["radarr"] }}
-        url: http://{{ ansible_host }}/radarr
-        logo: http://{{ ansible_host }}/radarr/Content/Images/logo.png
+        url: /radarr
+        logo: /radarr/Content/Images/logo.png
 
       - name: qBittorrent
         type: qBittorrent
-        url: http://{{ ansible_host }}/qbittorrent
-        logo: http://{{ ansible_host }}/qbittorrent/images/qbittorrent-tray.svg
+        url: /qbittorrent
+        logo: /qbittorrent/images/qbittorrent-tray.svg
 
