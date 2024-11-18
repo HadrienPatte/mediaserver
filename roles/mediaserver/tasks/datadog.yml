@@ -69,6 +69,7 @@
         third_party: true
     datadog_custom_checks:
       custom_atmospheric: custom_atmospheric.py
+      custom_thermal: custom_thermal.py
     datadog_checks:
       auth:
         logs:
@@ -96,6 +97,9 @@
               - overlay
               - nsfs
       custom_atmospheric:
+        init_config:
+        instances: [{}]
+      custom_thermal:
         init_config:
         instances: [{}]
       docker:
