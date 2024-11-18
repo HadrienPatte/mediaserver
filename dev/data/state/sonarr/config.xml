@@ -1,0 +1,17 @@
+<Config>
+  <AnalyticsEnabled>False</AnalyticsEnabled>
+  <ApiKey>89890000000000000000000000000000</ApiKey>
+  <AuthenticationMethod>External</AuthenticationMethod>
+  <AuthenticationRequired>Enabled</AuthenticationRequired>
+  <BindAddress>*</BindAddress>
+  <Branch>main</Branch>
+  <EnableSsl>False</EnableSsl>
+  <InstanceName>Sonarr</InstanceName>
+  <LaunchBrowser>True</LaunchBrowser>
+  <LogLevel>debug</LogLevel>
+  <Port>8989</Port>
+  <UrlBase></UrlBase>
+  <SslCertPassword></SslCertPassword>
+  <SslCertPath></SslCertPath>
+  <SslPort>9898</SslPort>
+</Config>

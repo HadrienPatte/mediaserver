@@ -1,0 +1,51 @@
+---
+title: "Mediaserver"
+subtitle: ""
+icon: "fab fa-raspberry-pi"
+
+header: true
+footer: false
+links: []
+
+columns: 3  # "auto" or number (must be a factor of 12: 1, 2, 3, 4, 6, 12)
+connectivityCheck: true  # whether you want to display a message when the apps are not accessible anymore (VPN disconnected for example)
+
+services:
+  - name: "Applications"
+    icon: "fas fa-play"
+    items:
+      - name: Radarr
+        type: Radarr
+        apikey: "78780000000000000000000000000000"
+        url: http://localhost:7878
+        logo: http://localhost:7878/Content/Images/logo.svg
+
+      - name: Sonarr
+        type: Sonarr
+        apikey: "89890000000000000000000000000000"
+        url: http://localhost:8989
+        logo: http://localhost:8989/Content/Images/logo.svg
+
+      - name: Prowlarr
+        type: Prowlarr
+        apikey: "96960000000000000000000000000000"
+        url: http://localhost:9696
+        logo: http://localhost:9696/Content/Images/logo.svg
+
+      - name: Lidarr
+        type: Lidarr
+        apikey: "86860000000000000000000000000000"
+        url: http://localhost:8686
+        logo: http://localhost:8686/Content/Images/logo.svg
+
+      - name: qBittorrent
+        type: qBittorrent
+        url: http://localhost:8585
+        logo: http://localhost:8585/images/qbittorrent-tray.svg
+
+      - name: Jellyfin
+        type: Emby
+        apikey: "CHANGE_ME"
+        libraryType: series
+        url: http://localhost:8096
+        logo: http://localhost:8096/web/assets/img/icon-transparent.png

@@ -1,0 +1,93 @@
+---
+name: mediaserver
+
+x-common: &common
+  init: true
+  deploy:
+    resources:
+      limits:
+        memory: 512M
+  pull_policy: always
+
+services:
+  homer:
+    <<: *common
+    container_name: homer
+    image: docker.io/b4bz/homer:latest
+    read_only: true
+    ports:
+      - 8080:8080
+    volumes:
+      - ./data/state/homer.yml:/www/assets/config.yml:ro
+
+  radarr:
+    <<: *common
+    container_name: radarr
+    image: ghcr.io/hadrienpatte/radarr:latest
+    ports:
+      - 7878:7878
+    volumes:
+      - ./data/state/radarr/config.xml:/config/config.xml
+      - ./data/state/radarr/radarr.db:/config/radarr.db
+      - ./data/state/radarr/radarr.db-wal:/config/radarr.db-wal
+      - ./data/state/radarr/MediaCover:/config/MediaCover
+      - ./data/media:/media
+
+  sonarr:
+    <<: *common
+    container_name: sonarr
+    image: ghcr.io/hadrienpatte/sonarr:latest
+    ports:
+      - 8989:8989
+    volumes:
+      - ./data/state/sonarr/config.xml:/config/config.xml
+      - ./data/state/sonarr/sonarr.db:/config/sonarr.db
+      - ./data/state/sonarr/sonarr.db-wal:/config/sonarr.db-wal
+      - ./data/state/sonarr/MediaCover:/config/MediaCover
+      - ./data/media:/media
+
+  prowlarr:
+    <<: *common
+    container_name: prowlarr
+    image: ghcr.io/hadrienpatte/prowlarr:latest
+    ports:
+      - 9696:9696
+    volumes:
+      - ./data/state/prowlarr/config.xml:/config/config.xml
+      - ./data/state/prowlarr/prowlarr.db:/config/prowlarr.db
+      - ./data/state/prowlarr/prowlarr.db-wal:/config/prowlarr.db-wal
+
+
+  lidarr:
+    <<: *common
+    container_name: lidarr
+    image: ghcr.io/hadrienpatte/lidarr:latest
+    ports:
+      - 8686:8686
+    volumes:
+      - ./data/state/lidarr/config.xml:/config/config.xml
+      - ./data/state/lidarr/lidarr.db:/config/lidarr.db
+      - ./data/state/lidarr/lidarr.db-wal:/config/lidarr.db-wal
+      - ./data/state/lidarr/MediaCover:/config/MediaCover
+      - ./data/media:/media
+
+
+  qbittorrent:
+    <<: *common
+    container_name: qbittorrent
+    image: ghcr.io/hadrienpatte/qbittorrent:latest
+    ports:
+      - 8585:8585
+    volumes:
+      - ./data/state/qbittorrent/qBittorrent.conf:/config/qBittorrent/config/qBittorrent.conf
+      - ./data/media/downloads:/media/downloads
+
+  jellyfin:
+    <<: *common
+    container_name: jellyfin
+    image: ghcr.io/hadrienpatte/jellyfin:latest
+    ports:
+      - 8096:8096
+    volumes:
+      - ./data/state/jellyfin:/config
+      - ./data/media/libraries:/libraries

@@ -1,0 +1,17 @@
+<Config>
+  <AnalyticsEnabled>False</AnalyticsEnabled>
+  <ApiKey>86860000000000000000000000000000</ApiKey>
+  <AuthenticationMethod>External</AuthenticationMethod>
+  <AuthenticationRequired>DisabledForLocalAddresses</AuthenticationRequired>
+  <BindAddress>*</BindAddress>
+  <Branch>master</Branch>
+  <EnableSsl>False</EnableSsl>
+  <InstanceName>Lidarr</InstanceName>
+  <LaunchBrowser>False</LaunchBrowser>
+  <LogLevel>debug</LogLevel>
+  <Port>8686</Port>
+  <UrlBase></UrlBase>
+  <SslCertPassword></SslCertPassword>
+  <SslCertPath></SslCertPath>
+  <SslPort>6868</SslPort>
+</Config>

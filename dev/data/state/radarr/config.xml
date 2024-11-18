@@ -1,0 +1,17 @@
+<Config>
+  <AnalyticsEnabled>False</AnalyticsEnabled>
+  <ApiKey>78780000000000000000000000000000</ApiKey>
+  <AuthenticationMethod>External</AuthenticationMethod>
+  <AuthenticationRequired>DisabledForLocalAddresses</AuthenticationRequired>
+  <BindAddress>*</BindAddress>
+  <Branch>master</Branch>
+  <EnableSsl>False</EnableSsl>
+  <InstanceName>Radarr</InstanceName>
+  <LaunchBrowser>True</LaunchBrowser>
+  <LogLevel>debug</LogLevel>
+  <Port>7878</Port>
+  <UrlBase></UrlBase>
+  <SslCertPassword></SslCertPassword>
+  <SslCertPath></SslCertPath>
+  <SslPort>9898</SslPort>
+</Config>
