@@ -38,7 +38,7 @@ containers:
       - /data/media/libraries:/media/libraries
 
 homer:
-  version: 24.11.1
+  version: 24.11.5
 
 themepark:
   theme: organizr
