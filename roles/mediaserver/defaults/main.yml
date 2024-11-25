@@ -42,7 +42,7 @@ homer:
 
 themepark:
   theme: organizr
-  version: 1.17.0
+  version: 1.19.1
 
 nginx_datadog:
   version: 1.4.0
