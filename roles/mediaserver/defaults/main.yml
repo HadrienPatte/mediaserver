@@ -44,7 +44,7 @@ homer:
 themepark:
   theme: organizr
   # renovate: datasource=github-releases depName=themepark-dev/theme.park
-  version: 1.19.1
+  version: 1.21.3
 
 nginx_datadog:
   # renovate: datasource=github-releases depName=DataDog/nginx-datadog
