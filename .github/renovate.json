@@ -3,7 +3,8 @@
     "config:recommended"
   ],
   "enabledManagers": [
-    "github-actions"
+    "github-actions",
+    "regex"
   ],
   "packageRules": [
     {
@@ -16,6 +17,16 @@
         "patch",
         "pin",
         "digest"
+      ]
+    }
+  ],
+  "regexManagers": [
+    {
+      "managerFilePatterns": [
+        "roles/mediaserver/defaults/main.yml"
+      ],
+      "matchStrings": [
+        "\\s+# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)\\s+version: (?<currentValue>.*)"
       ]
     }
   ]

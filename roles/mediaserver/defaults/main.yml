@@ -38,14 +38,17 @@ containers:
       - /data/media/libraries:/media/libraries
 
 homer:
-  version: 25.05.2
+  # renovate: datasource=github-releases depName=bastienwirtz/homer
+  version: v25.05.2
 
 themepark:
   theme: organizr
+  # renovate: datasource=github-releases depName=themepark-dev/theme.park
   version: 1.19.1
 
 nginx_datadog:
-  version: 1.4.0
+  # renovate: datasource=github-releases depName=DataDog/nginx-datadog
+  version: v1.4.0
 
 default:
   oci_registry: ghcr.io/hadrienpatte

@@ -18,7 +18,7 @@
 - name: Download datadog nginx tracing module
   become: true
   ansible.builtin.unarchive:
-    src: "https://github.com/DataDog/nginx-datadog/releases/download/v{{ nginx_datadog.version }}/ngx_http_datadog_module-appsec-arm64-{{ ansible_facts.packages.nginx[0].version | split('-') | first }}.so.tgz"
+    src: "https://github.com/DataDog/nginx-datadog/releases/download/{{ nginx_datadog.version }}/ngx_http_datadog_module-appsec-arm64-{{ ansible_facts.packages.nginx[0].version | split('-') | first }}.so.tgz"
     dest: /usr/lib/nginx/modules
     remote_src: "yes"
     owner: root
@@ -75,7 +75,7 @@
 - name: Install homer assets
   become: true
   ansible.builtin.unarchive:
-    src: https://github.com/bastienwirtz/homer/releases/download/v{{ homer.version }}/homer.zip
+    src: https://github.com/bastienwirtz/homer/releases/download/{{ homer.version }}/homer.zip
     dest: /var/www/html/homer
     remote_src: "yes"
     owner: www-data
