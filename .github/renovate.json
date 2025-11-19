@@ -5,7 +5,7 @@
   "enabledManagers": [
     "ansible-galaxy",
     "github-actions",
-    "regex"
+    "custom.regex"
   ],
   "packageRules": [
     {
@@ -21,8 +21,9 @@
       ]
     }
   ],
-  "regexManagers": [
+  "customManagers": [
     {
+      "customType": "regex",
       "managerFilePatterns": [
         "roles/mediaserver/defaults/main.yml"
       ],
