@@ -48,7 +48,7 @@ themepark:
 
 nginx_datadog:
   # renovate: datasource=github-releases depName=DataDog/nginx-datadog
-  version: v1.9.0
+  version: v1.10.0
 
 default:
   oci_registry: ghcr.io/hadrienpatte
