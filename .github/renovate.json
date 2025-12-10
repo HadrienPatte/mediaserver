@@ -29,7 +29,8 @@
       ],
       "matchStrings": [
         "\\s+# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)\\s+version: (?<currentValue>.*)"
-      ]
+      ],
+      "versioningTemplate": "loose"
     }
   ]
 }
