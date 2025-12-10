@@ -19,6 +19,15 @@
         "pin",
         "digest"
       ]
+    },
+    {
+      "matchDatasources": [
+        "github-releases"
+      ],
+      "matchPackageNames": [
+        "bastienwirtz/homer"
+      ],
+      "allowedVersions": "<=100"
     }
   ],
   "customManagers": [
