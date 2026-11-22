@@ -39,7 +39,7 @@ containers:
 
 homer:
   # renovate: datasource=github-releases depName=homer-dashboard/homer
-  version: v26.11.2
+  version: v26.11.4
 
 themepark:
   theme: organizr
