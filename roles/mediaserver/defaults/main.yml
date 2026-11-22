@@ -38,7 +38,7 @@ containers:
       - /data/media/libraries:/media/libraries
 
 homer:
-  # renovate: datasource=github-releases depName=bastienwirtz/homer
+  # renovate: datasource=github-releases depName=homer-dashboard/homer
   version: v26.11.2
 
 themepark:
